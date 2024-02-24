@@ -6,8 +6,15 @@ from setuptools import setup
 CWD = pathlib.Path(__file__).absolute().parent
 
 
-def get_version():
-    """Gets the gymnasium version."""
+def get_version() -> str:
+    """Pulls the version from the __init__ file in the library.
+
+    Raises:
+        RuntimeError: Raises when no __version__ was found.
+
+    Returns:
+        str: The current version of the library.
+    """
     path = CWD / "gymnasium" / "__init__.py"
     content = path.read_text()
 
@@ -17,13 +24,16 @@ def get_version():
     raise RuntimeError("bad version data in __init__.py")
 
 
-def get_description():
-    """Gets the description from the readme."""
+def get_description() -> str:
+    """Reads the long description from the README.md file.
+
+    Returns:
+        str: The long description.
+    """
+
     with open("README.md") as fh:
         long_description = "".join(fh.readlines())
     return long_description
 
-setup(
-    name="experiment_lab",
-    url="https://github.com/rishavb123/ExperimentLab",
-)
+
+setup(name="experiment_lab", version=get_version(), long_description=get_description())
