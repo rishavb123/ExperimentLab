@@ -1,0 +1,3 @@
+black
+hydra-core
+wandb
