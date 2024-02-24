@@ -1,3 +1,5 @@
+"""The setup code for the library."""
+
 import pathlib
 
 from setuptools import setup
