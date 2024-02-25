@@ -6,6 +6,9 @@ requires = ["setuptools >= 61.0.0"]
 authors = [{name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com"}]
 dependencies = [
   "hydra-core",
+  "numpy",
+  "pandas",
+  "torch",
   "wandb",
 ]
 description = "A novelty experimentation wrapper for minigrid"
