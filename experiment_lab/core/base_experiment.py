@@ -21,6 +21,9 @@ class BaseExperiment(abc.ABC):
 
         Args:
             seed (int): The random seed to use for the experiment run.
+
+        Returns:
+            Any: The results from this experiment run.
         """
         pass
 
@@ -30,7 +33,10 @@ class BaseExperiment(abc.ABC):
         Args:
             n_runs (int, optional): The number of times to run the experiment. Defaults to 1.
             initial_seed (Optional[int], optional): The initial seed of the first experiment run. The seeds of further experiment runs increment by 1 each run. Defaults to None.
-        """
+
+        Returns:
+            List[Any]: The list of results from the runs.
+        """        
         return [
             self.run(seed=None if initial_seed is None else initial_seed + run_num)
             for run_num in range(n_runs)
