@@ -17,7 +17,7 @@ def get_version() -> str:
     Returns:
         str: The current version of the library.
     """
-    path = CWD / "gymnasium" / "__init__.py"
+    path = CWD / "experiment_lab" / "__init__.py"
     content = path.read_text()
 
     for line in content.splitlines():
