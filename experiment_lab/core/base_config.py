@@ -31,7 +31,7 @@ class BaseConfig:
         assert self.n_runs >= 0, "Number of runs must be at least 0."
 
 
-def register_configs():
+def register_configs() -> None:
     """Registers the configs created."""
     cs = ConfigStore.instance()
     cs.store(name="base_config", node=BaseConfig)
