@@ -4,6 +4,7 @@ import collections.abc
 from typing import Any, Callable, Dict
 import time
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -50,3 +51,6 @@ def time_f(f: Callable) -> Callable:
         return result
 
     return g
+
+def camel_to_snake_case(s: str) -> str:
+    return re.sub(r'(?<!^)(?=[A-Z])', '_', s).lower()
