@@ -7,12 +7,16 @@ from hydra.core.config_store import ConfigStore
 
 
 class NRunMethodEnum(Enum):
+    """Method to run multi runs (series or parallel)
+    """
     series = 0
     parallel = 1
 
 
 @dataclass
 class BaseConfig:
+    """Basic configuration for general experiment runs."""
+
     experiment_name: str | None = None
 
     seed: int | None = None
@@ -25,5 +29,6 @@ class BaseConfig:
 
 
 def register_configs():
+    """Registers the configs created."""
     cs = ConfigStore.instance()
     cs.store(name="base_config", node=BaseConfig)
