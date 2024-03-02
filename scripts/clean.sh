@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 rm -rf *.egg-info
