@@ -1,3 +1,5 @@
+import os
+
 from typing import Callable, Type
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -10,10 +12,12 @@ def run_experiment(
     experiment_cls: Type[BaseExperiment],
     config_cls: Type[BaseConfig] = BaseConfig,
     register_configs: Callable[[], None] = register_configs,
-    config_path: str = "../../configs",
-    config_name: str = "base_config",
+    config_path: str = "./configs",
+    config_name: str = "config",
 ):
     register_configs()
+
+    config_path = os.path.join(os.getcwd(), config_path)
 
     @hydra.main(config_path=config_path, config_name=config_name, version_base=None)
     def main(dict_cfg: DictConfig):
