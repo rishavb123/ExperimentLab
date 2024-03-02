@@ -1,24 +1,34 @@
 """The file to hold the base configuration object."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any, Dict, List
 from hydra.core.config_store import ConfigStore
 
 
-class MultiRunMethodEnum(int, Enum):
+class NRunMethodEnum(Enum):
     series = 0
     parallel = 1
 
 
+defaults = []
+
+
 @dataclass
 class BaseConfig:
-    experiment_name: str = "run"
+    experiment_name: str | None = None
 
     seed: int | None = None
 
     n_runs: int = 1
-    multi_run_method: MultiRunMethodEnum = MultiRunMethodEnum.series
+    n_run_method: NRunMethodEnum = NRunMethodEnum.series
+
+    wandb: Dict[str, Any] | None = None
+    ignore_wandb: bool = False
+
+    defaults: List[Any] = field(default_factory=lambda: defaults)
 
 
-cs = ConfigStore.instance()
-cs.store(name="base_config", node=BaseConfig)
+def register_configs():
+    cs = ConfigStore.instance()
+    cs.store(name="base_config", node=BaseConfig)

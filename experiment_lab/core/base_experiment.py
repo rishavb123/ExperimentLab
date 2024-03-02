@@ -1,13 +1,17 @@
 """The file to hold the base experiment code."""
 
-from typing import Any, List
+from typing import Any, List, Tuple
 
 import abc
 import logging
 import multiprocessing as mp
+from numpy import save
+from omegaconf import OmegaConf
+import wandb
+import time
 
-from experiment_lab.common.utils import time_f
-from experiment_lab.core.base_config import BaseConfig, MultiRunMethodEnum
+from experiment_lab.common.utils import time_f, camel_to_snake_case
+from experiment_lab.core.base_config import BaseConfig, NRunMethodEnum
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +22,22 @@ class BaseExperiment(abc.ABC):
     def __init__(self, cfg: BaseConfig) -> None:
         """The constructor for the base experiment class."""
         self.cfg = cfg
-        self.full_name = f"{self.__class__.__name__.lower()}_{self.cfg.experiment_name}"
+        self.validate_cfg()
+        self.initialize_experiment()
 
-        assert self.cfg.n_runs >= 0
+    def validate_cfg(self) -> None:
+        assert self.cfg.n_runs >= 0, "Number of runs must be at least 0."
+
+    def initialize_experiment(self) -> None:
+        """Initializes the experiment that is about to get run."""
+        if self.cfg.experiment_name:
+            self.experiment_name = self.cfg.experiment_name
+        else:
+            self.experiment_name = (
+                f"{camel_to_snake_case(self.__class__.__name__.lower())}"
+            )
+        self.timestamp = int(time.time())
+        self.experiment_id = f"{self.experiment_name}_{self.timestamp}"
 
     @abc.abstractmethod
     def single_run(self, seed: int | None = None) -> Any:
@@ -35,6 +52,33 @@ class BaseExperiment(abc.ABC):
         """
         pass
 
+    def _single_run_wrapper(
+        self, intial_seed_and_run_num: Tuple[int | None, int] = (None, 0)
+    ) -> Any:
+        seed, run_num = intial_seed_and_run_num
+        seed = None if seed is None else seed + run_num
+        logger.info(f"Starting individual run with seed {seed}")
+        start_ns = time.time_ns()
+        wandb_run = None
+        if not self.cfg.ignore_wandb and self.cfg.wandb:
+            config = OmegaConf.to_container(self.cfg)
+            if type(config) != dict:
+                config = {"all": config}
+            wandb_run = wandb.init(
+                id=f"{self.experiment_id}_{run_num}_{self.cfg.n_runs}",
+                config=config,
+                reinit=True,
+                **self.cfg.wandb,
+            )
+        result = self.single_run(seed=seed)
+        end_ns = time.time_ns()
+        logger.info(
+            f"Finished run with seed {seed}. Time elapsed: {(end_ns - start_ns) / 1e9}s"
+        )
+        if wandb_run is not None:
+            wandb_run.finish()
+        return result
+
     @time_f
     def run(self) -> List[Any]:
         """Runs the experiment multiple times in series and aggregates the results.
@@ -46,22 +90,23 @@ class BaseExperiment(abc.ABC):
         Returns:
             List[Any]: The list of results from the runs.
         """
-        if self.cfg.n_runs == 1:
-            results = self.single_run(seed=self.cfg.seed)
-        elif self.cfg.multi_run_method == MultiRunMethodEnum.series:
+        results = None
+        if self.cfg.n_runs <= 1 or self.cfg.n_run_method == NRunMethodEnum.series:
             results = [
-                self.single_run(
-                    seed=None if self.cfg.seed is None else self.cfg.seed + run_num
-                )
+                self._single_run_wrapper((self.cfg.seed, run_num))
                 for run_num in range(self.cfg.n_runs)
             ]
-        else:
+        elif self.cfg.n_run_method == NRunMethodEnum.parallel:
             with mp.Pool() as pool:
                 results = pool.map(
-                    func=self.single_run,
+                    func=self._single_run_wrapper,
                     iterable=[
-                        (None if self.cfg.seed is None else self.cfg.seed + run_num)
-                        for run_num in range(self.cfg.n_runs)
+                        (self.cfg.seed, run_num) for run_num in range(self.cfg.n_runs)
                     ],
                 )
+        assert results is not None, "Unknown n_run_method!"
         return results
+
+    @property
+    def use_wandb(self):
+        return not self.cfg.ignore_wandb and self.cfg.wandb
