@@ -7,8 +7,8 @@ from hydra.core.config_store import ConfigStore
 
 
 class NRunMethodEnum(Enum):
-    """Method to run multi runs (series or parallel)
-    """
+    """Method to run multi runs (series or parallel)"""
+
     series = 0
     parallel = 1
 
@@ -26,6 +26,9 @@ class BaseConfig:
 
     wandb: Dict[str, Any] | None = None
     ignore_wandb: bool = False
+
+    def __post_init__(self):
+        assert self.n_runs >= 0, "Number of runs must be at least 0."
 
 
 def register_configs():

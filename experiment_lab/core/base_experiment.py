@@ -22,11 +22,7 @@ class BaseExperiment(abc.ABC):
     def __init__(self, cfg: BaseConfig) -> None:
         """The constructor for the base experiment class."""
         self.cfg = cfg
-        self.validate_cfg()
         self.initialize_experiment()
-
-    def validate_cfg(self) -> None:
-        assert self.cfg.n_runs >= 0, "Number of runs must be at least 0."
 
     def initialize_experiment(self) -> None:
         """Initializes the experiment that is about to get run."""
