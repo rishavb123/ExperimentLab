@@ -22,7 +22,6 @@ class BaseExperiment(abc.ABC):
 
         assert self.cfg.n_runs >= 0
 
-    @time_f
     @abc.abstractmethod
     def single_run(self, seed: int | None = None) -> Any:
         """The entrypoint to the experiment.
