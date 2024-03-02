@@ -20,3 +20,11 @@ git clone https://github.com/rishavb123/ExperimentLab.git
 cd ExperimentLab
 pip install -e .
 ```
+
+For specific types of experiments or dev optional dependencies use:
+
+```bash
+pip install -e .[{name}]
+```
+
+where `{name}` can be `rl` or `dev`.
