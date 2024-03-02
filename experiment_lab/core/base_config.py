@@ -1,17 +1,14 @@
 """The file to hold the base configuration object."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict
 from hydra.core.config_store import ConfigStore
 
 
 class NRunMethodEnum(Enum):
     series = 0
     parallel = 1
-
-
-defaults = []
 
 
 @dataclass
@@ -25,8 +22,6 @@ class BaseConfig:
 
     wandb: Dict[str, Any] | None = None
     ignore_wandb: bool = False
-
-    defaults: List[Any] = field(default_factory=lambda: defaults)
 
 
 def register_configs():
