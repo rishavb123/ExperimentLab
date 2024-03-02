@@ -21,6 +21,12 @@ cd ExperimentLab
 pip install -e .
 ```
 
+As a test, try running the following script:
+
+```bash
+python experiment_lab/examples/random_waits.py n_runs=20 multi_run_method=parallel seed=0
+```
+
 For specific types of experiments or dev optional dependencies use:
 
 ```bash
