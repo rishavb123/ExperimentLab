@@ -1,9 +1,3 @@
-seed: 0
-n_runs: 2
-n_run_method: series
-wandb:
-    project: experiments
-ignore_wandb: true
 defaults:
     - base_config
     - _self_
