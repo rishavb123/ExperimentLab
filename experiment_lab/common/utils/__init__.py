@@ -1,7 +1,11 @@
 """A python module for utilities functions."""
 
 import collections.abc
-from typing import Any, Dict
+from typing import Any, Callable, Dict
+import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def default(val: Any, d: Any, null_val: Any = None) -> Any:
@@ -34,3 +38,15 @@ def deep_update(d: Dict[Any, Any], u: collections.abc.Mapping) -> Dict[Any, Any]
         else:
             d[k] = v
     return d
+
+
+def time_f(f: Callable) -> Callable:
+    def g(*args, **kwargs):
+        logger.info(f"Start {f.__name__}")
+        start_ns = time.process_time_ns()
+        result = f(*args, **kwargs)
+        end_ns = time.process_time_ns()
+        logger.info(f"End {f.__name__}. Time Elapsed: {(end_ns - start_ns) / 1e9}s")
+        return result
+
+    return g
