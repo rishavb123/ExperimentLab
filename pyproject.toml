@@ -3,26 +3,19 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools >= 61.0.0"]
 
 [project]
-authors = [{name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com"}]
-dependencies = [
-  "hydra-core",
-  "numpy",
-  "pandas",
-  "torch",
-  "wandb",
-]
-description = "A novelty experimentation wrapper for minigrid"
-dynamic = ["version"]
-keywords = ["experiment", "suite", "lab"]
 name = "ExperimentLab"
+description = "A novelty experimentation wrapper for minigrid"
+keywords = ["experiment", "suite", "lab"]
+authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
 readme = "README.md"
+dynamic = ["version"]
 requires-python = ">=3.11"
+dependencies = ["hydra-core", "numpy", "pandas", "torch", "wandb"]
 
 [project.urls]
 Repository = "https://github.com/rishavb123/ExperimentLab"
 
 [project.optional-dependencies]
-dev = [
-  "pytest",
-  "black",
-]
+all = ["gymnasium"]
+rl = ["gymnasium"]
+dev = ["pytest", "black"]
