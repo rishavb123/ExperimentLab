@@ -4,6 +4,7 @@ from typing import Callable, Type
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+from experiment_lab.common.resolvers import register_resolvers
 from experiment_lab.core.base_config import BaseConfig, register_configs
 from experiment_lab.core.base_experiment import BaseExperiment
 
@@ -12,9 +13,11 @@ def run_experiment(
     experiment_cls: Type[BaseExperiment],
     config_cls: Type[BaseConfig] = BaseConfig,
     register_configs: Callable[[], None] = register_configs,
+    register_resolvers: Callable[[], None] = register_resolvers,
     config_path: str = "./configs",
     config_name: str = "config",
 ):
+    register_resolvers()
     register_configs()
 
     config_path = os.path.join(os.getcwd(), config_path)
