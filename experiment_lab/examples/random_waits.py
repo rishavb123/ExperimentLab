@@ -6,7 +6,7 @@ from experiment_lab.core.base_config import BaseConfig
 from experiment_lab.core.base_experiment import BaseExperiment
 
 
-class SimpleExperiment(BaseExperiment):
+class RandomWaits(BaseExperiment):
 
     def __init__(self, cfg: BaseConfig) -> None:
         super().__init__(cfg)
@@ -20,7 +20,7 @@ class SimpleExperiment(BaseExperiment):
 
 @hydra.main(config_path="../../configs", config_name="base_config", version_base=None)
 def main(cfg: BaseConfig):
-    e = SimpleExperiment(cfg=cfg)
+    e = RandomWaits(cfg=cfg)
     e.run()
 
 
