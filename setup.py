@@ -38,4 +38,8 @@ def get_long_description() -> str:
     return long_description
 
 
-setup(name="experiment_lab", version=get_version(), long_description=get_long_description())
+setup(
+    name="experiment_lab",
+    version=get_version(),
+    long_description=get_long_description(),
+)
