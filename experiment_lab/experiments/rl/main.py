@@ -9,3 +9,7 @@ def run_rl_experiment():
         register_configs=register_configs,
         config_path="./configs/rl",
     )
+
+
+if __name__ == "__main__":
+    run_rl_experiment()
