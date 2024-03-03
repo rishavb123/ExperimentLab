@@ -16,8 +16,8 @@ dependencies = ["hydra-core", "numpy", "pandas", "torch", "wandb"]
 Repository = "https://github.com/rishavb123/ExperimentLab"
 
 [project.optional-dependencies]
-all = ["gymnasium"]
-rl = ["gymnasium"]
+all = ["gymnasium", "stable_baselines3"]
+rl = ["gymnasium", "stable_baselines3"]
 dev = ["pytest", "black"]
 
 [tool.setuptools]
