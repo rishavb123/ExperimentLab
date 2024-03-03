@@ -114,5 +114,10 @@ class BaseExperiment(abc.ABC):
         return results
 
     @property
-    def use_wandb(self):
-        return not self.cfg.ignore_wandb and self.cfg.wandb
+    def use_wandb(self) -> bool:
+        """Whether or not to use wandb in this experiment
+
+        Returns:
+            bool: To use wandb.
+        """
+        return not self.cfg.ignore_wandb and bool(self.cfg.wandb)
