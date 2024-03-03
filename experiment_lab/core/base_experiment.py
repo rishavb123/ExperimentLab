@@ -5,7 +5,7 @@ from typing import Any, List, Tuple
 import abc
 import logging
 import multiprocessing as mp
-from numpy import save
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import OmegaConf
 import wandb
 import time
@@ -34,6 +34,7 @@ class BaseExperiment(abc.ABC):
             )
         self.timestamp = int(time.time())
         self.experiment_id = f"{self.experiment_name}_{self.timestamp}"
+        self.output_directory = HydraConfig.get().runtime.output_dir
 
     @abc.abstractmethod
     def single_run(self, run_id: str = "", seed: int | None = None) -> Any:
