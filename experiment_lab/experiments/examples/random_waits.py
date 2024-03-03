@@ -13,7 +13,7 @@ class RandomWaits(BaseExperiment):
         assert type(cfg) == BaseConfig
         super().__init__(cfg)
 
-    def single_run(self, seed: int | None = None) -> None:
+    def single_run(self, run_id: str = "", seed: int | None = None) -> None:
         print("Starting")
         rng = np.random.default_rng(seed=seed)
         num = rng.integers(10)

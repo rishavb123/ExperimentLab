@@ -36,11 +36,11 @@ class BaseExperiment(abc.ABC):
         self.experiment_id = f"{self.experiment_name}_{self.timestamp}"
 
     @abc.abstractmethod
-    def single_run(self, seed: int | None = None) -> Any:
+    def single_run(self, run_id: str = "", seed: int | None = None) -> Any:
         """The entrypoint to the experiment.
 
         Args:
-            run_num (int): The run number/index of the single run.
+            run_id (str): The a unique string id for the run.
             seed (int): The random seed to use for the experiment run.
 
         Returns:
@@ -51,17 +51,26 @@ class BaseExperiment(abc.ABC):
     def _single_run_wrapper(
         self, intial_seed_and_run_num: Tuple[int | None, int] = (None, 0)
     ) -> Any:
+        """A wrapper for the single run call to do run specific setup and post processing.
+
+        Args:
+            intial_seed_and_run_num (Tuple[int  |  None, int], optional): A tuple with both the seed and the run number. Defaults to (None, 0).
+
+        Returns:
+            Any: The results from the experiment run.
+        """
         seed, run_num = intial_seed_and_run_num
         seed = None if seed is None else seed + run_num
         logger.info(f"Starting individual run with seed {seed}")
         start_ns = time.time_ns()
         wandb_run = None
+        run_id = f"{self.experiment_id}_{run_num}_{self.cfg.n_runs}"
         if not self.cfg.ignore_wandb and self.cfg.wandb:
             config = OmegaConf.to_container(self.cfg)
             if type(config) != dict:
                 config = {"all": config}
             wandb_run = wandb.init(
-                id=f"{self.experiment_id}_{run_num}_{self.cfg.n_runs}",
+                id=run_id,
                 config=config,
                 reinit=True,
                 **self.cfg.wandb,
