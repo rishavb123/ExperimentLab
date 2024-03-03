@@ -1,3 +1,3 @@
 """The core module init file."""
 
-from base_experiment import BaseExperiment
+from experiment_lab.core.base_experiment import BaseExperiment

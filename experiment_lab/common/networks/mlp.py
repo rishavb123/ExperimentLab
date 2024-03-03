@@ -1,13 +1,13 @@
 """A python module containing a basic MLP network class"""
 
-from typing import List, Optional
+from typing import List
 from torch import nn
 
 
 def create_mlp_network(
     layer_sizes: List[int],
-    layer_activations: Optional[nn.Module | List[nn.Module]] = None,
-    final_activation: Optional[nn.Module] = None,
+    layer_activations: nn.Module | List[nn.Module] | None = None,
+    final_activation: nn.Module | None = None,
 ) -> nn.Module:
     """Creates an mlp network using nn.Sequential.
 

@@ -26,7 +26,7 @@ def get_version() -> str:
     raise RuntimeError("bad version data in __init__.py")
 
 
-def get_description() -> str:
+def get_long_description() -> str:
     """Reads the long description from the README.md file.
 
     Returns:
@@ -38,4 +38,8 @@ def get_description() -> str:
     return long_description
 
 
-setup(name="experiment_lab", version=get_version(), long_description=get_description())
+setup(
+    name="experiment_lab",
+    version=get_version(),
+    long_description=get_long_description(),
+)
