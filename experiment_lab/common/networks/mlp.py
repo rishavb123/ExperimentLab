@@ -13,8 +13,8 @@ def create_mlp_network(
 
     Args:
         layer_sizes (List[int]): The sizes of all the layers (including input and output layers).
-        layer_activation_cls (Optional[nn.Module], optional): The activation function to use in between each row. Can be a single activation or a list. Defaults to None.
-        final_activation_cls (Optional[nn.Module], optional): The final activation function to add for the last layer. Defaults to None.
+        layer_activation_cls (nn.Module | None, optional): The activation function to use in between each row. Can be a single activation or a list. Defaults to None.
+        final_activation_cls ([nn.Module] | None, optional): The final activation function to add for the last layer. Defaults to None.
 
     Returns:
         nn.Module: _description_
