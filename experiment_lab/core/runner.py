@@ -1,6 +1,6 @@
 import os
 
-from typing import Callable, Type
+from typing import Any, Callable, Type, List
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
@@ -16,17 +16,17 @@ def run_experiment(
     register_resolvers: Callable[[], None] = register_resolvers,
     config_path: str = "./configs",
     config_name: str = "config",
-):
+) -> List[Any]:
     register_resolvers()
     register_configs()
 
     config_path = os.path.join(os.getcwd(), config_path)
 
     @hydra.main(config_path=config_path, config_name=config_name, version_base=None)
-    def main(dict_cfg: DictConfig):
+    def main(dict_cfg: DictConfig) -> List[Any]:
         OmegaConf.resolve(dict_cfg)
         cfg: config_cls = OmegaConf.to_object(dict_cfg)  # type: ignore
         e = experiment_cls(cfg)
-        e.run()
+        return e.run()
 
-    main()
+    return main()
