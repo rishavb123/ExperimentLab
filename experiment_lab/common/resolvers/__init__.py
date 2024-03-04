@@ -11,11 +11,11 @@ from experiment_lab.common.resolvers.list_resolvers import (
     arange,
     linspace,
 )
+from experiment_lab.common.resolvers.object_resolvers import get_class
 
 
 def register_resolvers() -> None:
-    """Registers the resolvers imported to this file.
-    """
+    """Registers the resolvers imported to this file."""
     ignores = set(["register_resolvers", "isfunction"])
 
     resolvers = {

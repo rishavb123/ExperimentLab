@@ -10,14 +10,22 @@ authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
 readme = "README.md"
 dynamic = ["version"]
 requires-python = ">=3.11"
-dependencies = ["hydra-core", "numpy", "pandas", "torch", "wandb"]
+dependencies = [
+    "hydra-core",
+    "numpy",
+    "pandas",
+    "torch",
+    "wandb",
+    "tensorboard",
+]
 
 [project.urls]
 Repository = "https://github.com/rishavb123/ExperimentLab"
 
 [project.optional-dependencies]
-all = ["gymnasium"]
-rl = ["gymnasium"]
+all = ["gymnasium", "stable_baselines3", "moviepy"]
+rl = ["gymnasium", "stable_baselines3"]
+rl-vid = ["moviepy"]
 dev = ["pytest", "black"]
 
 [tool.setuptools]

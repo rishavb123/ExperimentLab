@@ -27,7 +27,8 @@ class BaseConfig:
     wandb: Dict[str, Any] | None = None
     ignore_wandb: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Validation checks for base config"""
         assert self.n_runs >= 0, "Number of runs must be at least 0."
 
 
