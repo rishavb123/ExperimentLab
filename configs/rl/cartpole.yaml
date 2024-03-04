@@ -9,6 +9,8 @@ wandb:
     sync_tensorboard: true
     monitor_gym: true
     save_code: true
+env_config:
+    env_id: CartPole-v1
 ignore_wandb: false
 log: true
 save_model: true
