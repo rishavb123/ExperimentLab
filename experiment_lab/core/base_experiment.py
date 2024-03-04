@@ -84,6 +84,7 @@ class BaseExperiment(abc.ABC):
             f"Finished run with seed {seed}. Time elapsed: {(end_ns - start_ns) / 1e9}s"
         )
         if wandb_run is not None:
+            wandb_run.save(self.output_directory)
             wandb_run.finish()
         return result
 

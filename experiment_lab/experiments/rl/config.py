@@ -9,7 +9,6 @@ from experiment_lab.core.base_config import BaseConfig
 class WandbCallbackConfig:
     """The wandb callback config dataclass."""
 
-    verbose: int = 1
     model_save_freq: int = 1_000
     gradient_save_freq: int = 0
 
@@ -37,7 +36,11 @@ class RLConfig(BaseConfig):
 
     callback_cls_lst: List[str] | None = None
     callback_kwargs_lst: List[Dict[str, Any]] | None = None
-    wandb_callback_kwargs: WandbCallbackConfig | None = field(default_factory=WandbCallbackConfig)
+    wandb_callback_kwargs: WandbCallbackConfig | None = field(
+        default_factory=WandbCallbackConfig
+    )
+
+    verbose: int = 1
 
     monitor_dir: str | None = None
     monitor_kwargs: Dict[str, Any] | None = None
@@ -47,7 +50,7 @@ class RLConfig(BaseConfig):
 
     log: bool = True
     log_interval: int = 1
-    save_model: bool = False
+    save_model: bool = True
 
     device: str = "mps"
     gpu_idx: int | None = None

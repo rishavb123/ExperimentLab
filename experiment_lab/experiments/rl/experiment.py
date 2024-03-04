@@ -110,6 +110,7 @@ class RLExperiment(BaseExperiment):
             policy_kwargs=self.cfg.policy_kwargs,
             device=self.device,
             tensorboard_log=f"{self.output_directory}/logs/" if self.cfg.log else None,
+            verbose=self.cfg.verbose,
             **self.model_kwargs,
         )
         model.set_random_seed(seed)
@@ -127,7 +128,7 @@ class RLExperiment(BaseExperiment):
                     gradient_save_freq=self.cfg.wandb_callback_kwargs.gradient_save_freq,
                     model_save_freq=self.cfg.wandb_callback_kwargs.model_save_freq,
                     model_save_path=model_save_path,
-                    verbose=self.cfg.wandb_callback_kwargs.verbose,
+                    verbose=self.cfg.verbose,
                 )
             )
         for callback_cls, callback_kwargs in zip(

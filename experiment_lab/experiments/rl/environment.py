@@ -8,6 +8,7 @@ import gymnasium as gym
 from gymnasium.core import RenderFrame
 from gymnasium.envs.registration import EnvSpec
 import numpy as np
+import multiprocessing as mp
 
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import SubprocVecEnv
@@ -254,6 +255,9 @@ class GeneralVecEnv(SubprocVecEnv):
             return _init
 
         env_fns = [make_env_fn(rank=i) for i in range(n_envs)]
+
+        if start_method is None:
+            start_method = "fork" if "fork" in mp.get_all_start_methods() else None
 
         super().__init__(env_fns=env_fns, start_method=start_method)
 
