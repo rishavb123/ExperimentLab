@@ -5,6 +5,7 @@ from typing import Any, List, Type, Dict
 import gymnasium as gym
 import hydra
 import torch
+import wandb
 from wandb.integration.sb3 import WandbCallback
 
 import stable_baselines3
@@ -73,7 +74,9 @@ class RLExperiment(BaseExperiment):
 
         self.device: torch.device = torch.device(self.cfg.device)
 
-    def single_run(self, run_id: str = "", seed: int | None = None) -> Any:
+    def single_run(
+        self, run_id: str = "", run_output_path: str = "", seed: int | None = None
+    ) -> Any:
         """Runs the rl experiment a single time with one seed.
 
         Args:
@@ -109,18 +112,18 @@ class RLExperiment(BaseExperiment):
             policy=self.policy_cls,
             policy_kwargs=self.cfg.policy_kwargs,
             device=self.device,
-            tensorboard_log=f"{self.output_directory}/logs/" if self.cfg.log else None,
+            tensorboard_log=f"./logs/" if self.cfg.log else None,
             verbose=self.cfg.verbose,
             **self.model_kwargs,
         )
         model.set_random_seed(seed)
-        model_save_path = f"{self.output_directory}/models/{run_id}/"
+        model_save_path = f"{run_output_path}/models/"
 
         # Instantiate the callbacks
         callback_instances = []
         if (
             self.cfg.log
-            and self.use_wandb
+            and self.cfg.wandb
             and self.cfg.wandb_callback_kwargs is not None
         ):
             callback_instances.append(
@@ -148,6 +151,6 @@ class RLExperiment(BaseExperiment):
             ),
         )
 
-        if self.cfg.save_model and not self.use_wandb:
+        if self.cfg.save_model:
             os.makedirs(model_save_path, exist_ok=True)
             model.save(f"{model_save_path}/final.zip")

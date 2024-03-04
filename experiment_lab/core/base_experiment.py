@@ -3,12 +3,13 @@
 from typing import Any, List, Tuple
 
 import abc
+import os
 import logging
 import multiprocessing as mp
 from hydra.core.hydra_config import HydraConfig
-from omegaconf import OmegaConf
 import wandb
 import time
+import glob
 
 from experiment_lab.common.utils import time_f, camel_to_snake_case
 from experiment_lab.core.base_config import BaseConfig, NRunMethodEnum
@@ -39,11 +40,14 @@ class BaseExperiment(abc.ABC):
         self.output_directory = HydraConfig.get().runtime.output_dir
 
     @abc.abstractmethod
-    def single_run(self, run_id: str = "", seed: int | None = None) -> Any:
+    def single_run(
+        self, run_id: str = "", run_output_path: str = "", seed: int | None = None
+    ) -> Any:
         """The entrypoint to the experiment.
 
         Args:
             run_id (str): The a unique string id for the run.
+            run_output_path (str): The path to output or save anything for the run.
             seed (int): The random seed to use for the experiment run.
 
         Returns:
@@ -68,6 +72,9 @@ class BaseExperiment(abc.ABC):
         start_ns = time.time_ns()
         wandb_run = None
         run_id = f"{self.experiment_id}_{run_num}_{self.cfg.n_runs}"
+        run_output_path = f"{self.output_directory}/{run_id}"
+        os.makedirs(run_output_path, exist_ok=True)
+
         if not self.cfg.ignore_wandb and self.cfg.wandb:
             wandb_run = wandb.init(
                 id=run_id,
@@ -78,15 +85,29 @@ class BaseExperiment(abc.ABC):
                     "experiment_id": self.experiment_id,
                 },
                 reinit=True,
+                settings=wandb.Settings(start_method="thread"),
+                group=self.experiment_name,
                 **self.cfg.wandb,
             )
-        result = self.single_run(seed=seed)
+        result = self.single_run(
+            run_id=run_id, run_output_path=run_output_path, seed=seed
+        )
         end_ns = time.time_ns()
         logger.info(
             f"Finished run with seed {seed}. Time elapsed: {(end_ns - start_ns) / 1e9}s"
         )
         if wandb_run is not None:
-            wandb_run.save(self.output_directory)
+
+            def save_folder(folder_path, base_path):
+                for p in glob.glob(f"{folder_path}/**", recursive=True):
+                    if os.path.isfile(p):
+                        wandb_run.save(p, base_path=base_path, policy="end")
+
+            save_folder(folder_path=run_output_path, base_path=run_output_path)
+            save_folder(
+                folder_path=f"{self.output_directory}/.hydra",
+                base_path=self.output_directory,
+            )
             wandb_run.finish()
         return result
 
@@ -117,12 +138,3 @@ class BaseExperiment(abc.ABC):
                 )
         assert results is not None, "Unknown n_run_method!"
         return results
-
-    @property
-    def use_wandb(self) -> bool:
-        """Whether or not to use wandb in this experiment
-
-        Returns:
-            bool: To use wandb.
-        """
-        return not self.cfg.ignore_wandb and bool(self.cfg.wandb)
