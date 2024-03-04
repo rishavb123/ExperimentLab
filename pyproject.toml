@@ -23,13 +23,8 @@ dependencies = [
 Repository = "https://github.com/rishavb123/ExperimentLab"
 
 [project.optional-dependencies]
-all = [
-    "gymnasium",
-    "gymnasium[classic-control]",
-    "stable_baselines3",
-    "moviepy",
-]
-rl = ["gymnasium", "gymnasium[classic-control]", "stable_baselines3"]
+all = ["gymnasium", "stable_baselines3", "moviepy"]
+rl = ["gymnasium", "stable_baselines3"]
 rl-vid = ["moviepy"]
 dev = ["pytest", "black"]
 
