@@ -54,4 +54,4 @@ pip install moviepy
 - Windows: Follow the instructions [here](https://phoenixnap.com/kb/ffmpeg-windows). Note that I did not write or review this instructions.
 3. Make sure to set the location of the ffmpeg binary to the `$IMAGEIO_F
 
-Also, it should be noted that there are some issues with using the multiprocessing vector environment with the video recorder. Ensure that the start_method set in the RL config is "spawn" (which is the default if it is left as None) for best results. On MacOS, see (this)[https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr] page for potential problems with using "fork".
+Also, it should be noted that there are some issues with using the multiprocessing vector environment with the video recorder. Ensure that the start_method set in the RL config is "spawn" (which is the default if it is left as None) for best results. On MacOS, see [this](https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr) page for potential problems with using "fork".
