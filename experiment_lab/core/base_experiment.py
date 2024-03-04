@@ -10,6 +10,7 @@ from hydra.core.hydra_config import HydraConfig
 import wandb
 import time
 import glob
+import pickle as pkl
 
 from experiment_lab.common.utils import time_f, camel_to_snake_case
 from experiment_lab.core.base_config import BaseConfig, NRunMethodEnum
@@ -93,6 +94,9 @@ class BaseExperiment(abc.ABC):
         result = self.single_run(
             run_id=run_id, run_output_path=run_output_path, seed=seed
         )
+        if result is not None:
+            with open(f"{run_output_path}/result.pkl", "wb") as f:
+                pkl.dump(result, f)
         end_ns = time.time_ns()
         logger.info(
             f"Finished run with seed {seed}. Time elapsed: {(end_ns - start_ns) / 1e9}s"
