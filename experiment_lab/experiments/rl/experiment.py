@@ -114,8 +114,10 @@ class RLExperiment(BaseExperiment):
         if self.cfg.record_policy_videos:
             env = VecVideoRecorder(
                 env,
-                f"{run_output_path}/videos",
-                record_video_trigger=lambda x: x % self.cfg.video_freq == 0,
+                f"./wandb/videos/{run_id}",
+                record_video_trigger=lambda x: x
+                % (self.cfg.video_freq // self.cfg.n_envs)
+                == 0,
                 video_length=self.cfg.video_length,
                 name_prefix=self.cfg.video_name_prefix,
             )
