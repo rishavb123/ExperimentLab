@@ -13,6 +13,7 @@ from stable_baselines3.common.callbacks import CallbackList
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.policies import BasePolicy
 from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.vec_env import VecVideoRecorder
 
 
 from experiment_lab.core.base_experiment import BaseExperiment
@@ -74,6 +75,11 @@ class RLExperiment(BaseExperiment):
 
         self.device: torch.device = torch.device(self.cfg.device)
 
+        self.additional_wandb_init_kwargs["sync_tensorboard"] = True
+        self.additional_wandb_init_kwargs["save_code"] = True
+        if self.cfg.record_policy_videos:
+            self.additional_wandb_init_kwargs["monitor_gym"] = True
+
     def single_run(
         self, run_id: str = "", run_output_path: str = "", seed: int | None = None
     ) -> Any:
@@ -101,8 +107,19 @@ class RLExperiment(BaseExperiment):
             monitor_dir=self.cfg.monitor_dir,
             monitor_kwargs=self.cfg.monitor_kwargs,
             start_method=self.cfg.start_method,
-            render_mode=self.cfg.render_mode,
+            render_mode=(
+                "rgb_array" if self.cfg.record_policy_videos else self.cfg.render_mode
+            ),
         )
+        if self.cfg.record_policy_videos:
+            env = VecVideoRecorder(
+                env,
+                f"{run_output_path}/videos",
+                record_video_trigger=lambda x: x % self.cfg.video_freq == 0,
+                video_length=self.cfg.video_length,
+                name_prefix=self.cfg.video_name_prefix,
+            )
+
         env.seed(seed)
         env.reset()
 

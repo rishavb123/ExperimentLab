@@ -45,6 +45,11 @@ class RLConfig(BaseConfig):
     monitor_dir: str | None = None
     monitor_kwargs: Dict[str, Any] | None = None
 
+    record_policy_videos: bool = False
+    video_length: int = 200
+    video_freq: int = 5000
+    video_name_prefix: str = "agent"
+
     start_method: str | None = None
     render_mode: str | None = None
 

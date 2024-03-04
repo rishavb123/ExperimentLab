@@ -38,6 +38,7 @@ class BaseExperiment(abc.ABC):
         self.timestamp = int(time.time())
         self.experiment_id = f"{self.experiment_name}_{self.timestamp}"
         self.output_directory = HydraConfig.get().runtime.output_dir
+        self.additional_wandb_init_kwargs = {}
 
     @abc.abstractmethod
     def single_run(
@@ -86,7 +87,7 @@ class BaseExperiment(abc.ABC):
                 },
                 reinit=True,
                 settings=wandb.Settings(start_method="thread"),
-                group=self.experiment_name,
+                **self.additional_wandb_init_kwargs,
                 **self.cfg.wandb,
             )
         result = self.single_run(
