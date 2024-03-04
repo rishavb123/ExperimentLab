@@ -38,7 +38,7 @@ class RandomWaits(BaseExperiment):
         logger.info("Starting")
         rng = np.random.default_rng(seed=seed)
         num = rng.integers(10)
-        if self.use_wandb:
+        if self.cfg.wandb:
             wandb.log({"num": num})
         time.sleep(rng.integers(num))
         logger.info("Done!")
