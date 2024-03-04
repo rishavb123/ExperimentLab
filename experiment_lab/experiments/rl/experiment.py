@@ -169,6 +169,8 @@ class RLExperiment(BaseExperiment):
                 else None
             ),
         )
+        
+        env.close()
 
         if self.cfg.save_model:
             os.makedirs(model_save_path, exist_ok=True)
