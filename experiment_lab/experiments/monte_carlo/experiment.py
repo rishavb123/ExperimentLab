@@ -73,13 +73,13 @@ class MCExperiment(BaseExperiment):
                     post_processor.process(aggregator.aggregate(all_samples))
                 )
                 if self.cfg.wandb:
-                    wandb.log({"result": results[-1]})
+                    wandb.log(results[-1])
                 if self.cfg.log_results:
                     logger.info(f"The current result is: {results[-1]}")
         if not self.cfg.aggregate_every_batch and all_samples is not None:
             results = post_processor.process(aggregator.aggregate(all_samples))
             if self.cfg.wandb:
-                wandb.log({"result": results})
+                wandb.log(results)
             if self.cfg.log_results:
-                logger.info(f"The current result is: {results[-1]}")
+                logger.info(f"The current result is: {results}")
         return results

@@ -1,7 +1,8 @@
 """Python file for the aggregators."""
 
 import abc
-from typing import Any, Callable
+from typing import Any, Callable, Dict
+import hydra
 import numpy as np
 
 
@@ -28,14 +29,17 @@ class BaseAggregator(abc.ABC):
 class NpAggregator(BaseAggregator):
     """Aggregator to apply a numpy function to the axis=0 of the samples."""
 
-    def __init__(self, np_func: Callable[..., np.ndarray] = np.mean) -> None:
+    def __init__(self, np_func: Callable[..., np.ndarray] | str = np.mean) -> None:
         """The constructor of the NpAggregator that sets the np function to use.
 
         Args:
             np_func (Callable, optional): The np function to use. Defaults to np.mean.
         """
         super().__init__()
-        self.np_func = np_func
+        if not isinstance(np_func, str):
+            self.np_func: Callable[..., np.ndarray] = np_func
+        else:
+            self.np_func: Callable[..., np.ndarray] = hydra.utils.get_method(f"numpy.{np_func}")
 
     def aggregate(self, samples: np.ndarray) -> Any:
         """The aggregate function that applies the np function to the samples.
@@ -47,3 +51,27 @@ class NpAggregator(BaseAggregator):
             Any: The aggregated result.
         """
         return self.np_func(samples, axis=0)
+
+
+class MultipleAggregators(BaseAggregator):
+    """Aggregator to use multiple aggregators together."""
+
+    def __init__(self, aggregators: Dict[str, BaseAggregator]) -> None:
+        """Constructor for the aggregator to combine multiple aggregators.
+
+        Args:
+            aggregators (Dict[str, BaseAggregator]): The aggregators to combine.
+        """
+        super().__init__()
+        self.aggregators = aggregators
+
+    def aggregate(self, samples: np.ndarray) -> Dict[str, Any]:
+        """Aggregates the samples using each aggregators and combines the results.
+
+        Args:
+            samples (np.ndarray): The samples to aggregate.
+
+        Returns:
+            Dict[str, Any]: The aggregated results.
+        """
+        return {k: v.aggregate(samples=samples) for k, v in self.aggregators.items()}

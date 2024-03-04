@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Dict
 import numpy as np
 
 from experiment_lab.experiments.monte_carlo import UniformSampler, BasePostProcessor
@@ -21,5 +21,5 @@ class MultiplyByFour(BasePostProcessor):
     def __init__(self) -> None:
         super().__init__()
 
-    def process(self, result: float) -> Any:
-        return result * 4
+    def process(self, result: Dict[str, float]) -> Dict[str, float]:
+        return {"pi_estimate": result["mean"] * 4, **result}

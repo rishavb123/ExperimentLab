@@ -3,6 +3,7 @@
 from experiment_lab.experiments.monte_carlo.components.aggregators import (
     BaseAggregator,
     NpAggregator,
+    MultipleAggregators,
 )
 from experiment_lab.experiments.monte_carlo.components.samplers import (
     BaseSampler,

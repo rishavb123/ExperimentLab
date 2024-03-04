@@ -1,6 +1,6 @@
 """Python file for the post proessors"""
 
-from typing import Any
+from typing import Any, Dict
 import abc
 
 
@@ -12,14 +12,14 @@ class BasePostProcessor(abc.ABC):
         super().__init__()
 
     @abc.abstractmethod
-    def process(self, result: Any) -> Any:
+    def process(self, result: Any) -> Dict[str, Any]:
         """Applies post processing on the aggregated result.
 
         Args:
             result (Any): The aggregated result.
 
         Returns:
-            Any: The post processed result
+            Any: The post processed result (publishable to wandb with names).
         """
         pass
 
@@ -31,13 +31,13 @@ class PassThroughPostProcessor(BasePostProcessor):
         """The constructor for the pass through post processor."""
         super().__init__()
 
-    def process(self, result: Any) -> Any:
+    def process(self, result: Any) -> Dict[str, Any]:
         """Returns the passed in result.
 
         Args:
             result (Any): The aggregated result.
 
         Returns:
-            Any: The same result.
+            Any: The same result wrapped in a dict.
         """
-        return result
+        return {"result": result}
