@@ -1,3 +1,5 @@
+"""Python file containing the configs for rl experiments."""
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 from hydra.core.config_store import ConfigStore
