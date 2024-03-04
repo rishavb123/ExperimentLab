@@ -280,7 +280,7 @@ class GeneralVecEnv(SubprocVecEnv):
         ):
             self.last_incr = self.total_time_steps
             # Trigger the novelty if enough steps have passed
-            transfer_injected = self.env_method("incr_env_idx")
+            transfer_injected: List[bool] = self.env_method("incr_env_idx")
             if np.any(transfer_injected):
                 self.cur_env_idx += 1
                 dones[:] = True
