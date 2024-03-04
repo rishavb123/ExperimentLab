@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 class BaseExperiment(abc.ABC):
     """A generic base experiment class for all experiments to inherit from."""
 
+    INCR_SEED_BY = 12
+
     def __init__(self, cfg: BaseConfig) -> None:
         """The constructor for the base experiment class."""
         self.cfg = cfg
@@ -61,7 +63,7 @@ class BaseExperiment(abc.ABC):
             Any: The results from the experiment run.
         """
         seed, run_num = intial_seed_and_run_num
-        seed = None if seed is None else seed + run_num
+        seed = None if seed is None else seed + run_num * BaseExperiment.INCR_SEED_BY
         logger.info(f"Starting individual run with seed {seed}")
         start_ns = time.time_ns()
         wandb_run = None
