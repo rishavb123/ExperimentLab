@@ -1,4 +1,4 @@
-# Experiment Lab
+# ExperimentLab
 
 A suite of flexible experiments of a variety of different tasks.
 
