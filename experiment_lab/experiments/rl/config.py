@@ -9,7 +9,7 @@ from experiment_lab.core.base_config import BaseConfig
 class WandbCallbackConfig:
     """The wandb callback config dataclass."""
 
-    verbose: int = 2
+    verbose: int = 1
     model_save_freq: int = 1_000
     gradient_save_freq: int = 0
 
