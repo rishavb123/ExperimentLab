@@ -25,7 +25,6 @@ class BaseConfig:
     n_run_method: NRunMethodEnum = NRunMethodEnum.series
 
     wandb: Dict[str, Any] | None = None
-    ignore_wandb: bool = False
 
     def __post_init__(self) -> None:
         """Validation checks for base config"""

@@ -77,7 +77,7 @@ class BaseExperiment(abc.ABC):
         run_output_path = f"{self.output_directory}/{run_id}"
         os.makedirs(run_output_path, exist_ok=True)
 
-        if not self.cfg.ignore_wandb and self.cfg.wandb:
+        if self.cfg.wandb:
             wandb_run = wandb.init(
                 id=run_id,
                 config={
