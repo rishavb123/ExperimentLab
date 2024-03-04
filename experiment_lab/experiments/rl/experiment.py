@@ -81,17 +81,19 @@ class RLExperiment(BaseExperiment):
             self.additional_wandb_init_kwargs["monitor_gym"] = True
 
     def single_run(
-        self, run_id: str = "", run_output_path: str = "", seed: int | None = None
+        self, run_id: str, run_output_path: str, seed: int | None = None
     ) -> Any:
-        """Runs the rl experiment a single time with one seed.
+        """A single run of the rl experiment.
 
         Args:
-            run_id (str, optional): The run id. Defaults to "".
-            seed (int | None, optional): The seed. Defaults to None.
+            run_id (str): The run id.
+            run_output_path (str): The run output path.
+            seed (int | None, optional): The initial seed.. Defaults to None.
 
         Returns:
-            Any: Any resulting metrics
+            Any: Any resulting metrics.
         """
+
         # Setup the device to train on
         if self.cfg.gpu_idx is not None:
             os.environ["CUDA_VISIBLE_DEVICES"] = str(self.cfg.gpu_idx)
@@ -169,7 +171,7 @@ class RLExperiment(BaseExperiment):
                 else None
             ),
         )
-        
+
         env.close()
 
         if self.cfg.save_model:

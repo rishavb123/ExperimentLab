@@ -43,14 +43,14 @@ class BaseExperiment(abc.ABC):
 
     @abc.abstractmethod
     def single_run(
-        self, run_id: str = "", run_output_path: str = "", seed: int | None = None
+        self, run_id: str, run_output_path: str, seed: int | None = None
     ) -> Any:
         """The entrypoint to the experiment.
 
         Args:
             run_id (str): The a unique string id for the run.
             run_output_path (str): The path to output or save anything for the run.
-            seed (int): The random seed to use for the experiment run.
+            seed (int | None, optional): The random seed to use for the experiment run. Defaults to None.
 
         Returns:
             Any: The results from this experiment run.
