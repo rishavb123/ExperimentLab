@@ -85,6 +85,7 @@ class BaseExperiment(abc.ABC):
                     "experiment_name": self.experiment_name,
                     "timestamp": self.timestamp,
                     "experiment_id": self.experiment_id,
+                    "experiment_cls": self.__class__.__name__.lower(),
                 },
                 reinit=True,
                 settings=wandb.Settings(start_method="thread"),
