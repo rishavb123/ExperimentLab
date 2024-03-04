@@ -33,7 +33,7 @@ For specific types of experiments or dev optional dependencies use:
 pip install -e .[{name}]
 ```
 
-where `{name}` can be `rl` or `dev`.
+where `{name}` can be `all`, `rl`, `rl-vid`, or `dev`.
 
 ### Debugging Tips
 
