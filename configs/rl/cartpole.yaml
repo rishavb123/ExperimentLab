@@ -1,0 +1,10 @@
+experiment_name: cartpole_rl_experiment
+wandb:
+    project: experiments
+    sync_tensorboard: true
+    monitor_gym: true
+    save_code: true
+total_time_steps: 10000
+defaults:
+    - rl_config
+    - _self_

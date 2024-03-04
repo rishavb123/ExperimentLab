@@ -67,12 +67,14 @@ class BaseExperiment(abc.ABC):
         wandb_run = None
         run_id = f"{self.experiment_id}_{run_num}_{self.cfg.n_runs}"
         if not self.cfg.ignore_wandb and self.cfg.wandb:
-            config = OmegaConf.to_container(self.cfg)
-            if type(config) != dict:
-                config = {"all": config}
             wandb_run = wandb.init(
                 id=run_id,
-                config=config,
+                config={
+                    **self.cfg.__dict__,
+                    "experiment_name": self.experiment_name,
+                    "timestamp": self.timestamp,
+                    "experiment_id": self.experiment_id,
+                },
                 reinit=True,
                 **self.cfg.wandb,
             )

@@ -1,14 +1,23 @@
 """The rl experiment python file."""
 
 import os
-from typing import Any
+from typing import Any, List, Type, Dict
+import gymnasium as gym
+import hydra
 import torch
 from wandb.integration.sb3 import WandbCallback
+
+import stable_baselines3
 from stable_baselines3.common.callbacks import CallbackList
+from stable_baselines3.common.base_class import BaseAlgorithm
+from stable_baselines3.common.policies import BasePolicy
+from stable_baselines3.common.callbacks import BaseCallback
+
 
 from experiment_lab.core.base_experiment import BaseExperiment
 from experiment_lab.experiments.rl.config import RLConfig
 from experiment_lab.experiments.rl.environment import GeneralVecEnv
+from experiment_lab.common.utils import default
 
 
 class RLExperiment(BaseExperiment):
@@ -23,20 +32,69 @@ class RLExperiment(BaseExperiment):
         self.cfg = cfg
         self.initialize_experiment()
 
+    def initialize_experiment(self) -> None:
+        """Initializes the rl experiment"""
+        super().initialize_experiment()
+
+        self.model_cls: Type[BaseAlgorithm] = hydra.utils.get_class(self.cfg.model_cls)
+        self.wrapper_cls_lst: List[Type[gym.Wrapper]] = (
+            []
+            if self.cfg.wrapper_cls_lst is None
+            else [
+                hydra.utils.get_class(wrapper_cls)
+                for wrapper_cls in self.cfg.wrapper_cls_lst
+            ]
+        )
+        self.policy_cls: Type[BasePolicy] = hydra.utils.get_class(self.cfg.policy_cls)
+        self.callback_cls_lst: List[Type[BaseCallback]] = (
+            []
+            if self.cfg.callback_cls_lst is None
+            else [
+                hydra.utils.get_class(callback_cls)
+                for callback_cls in self.cfg.callback_cls_lst
+            ]
+        )
+
+        self.wrapper_kwargs_lst: List[Dict[str, Any]] = default(
+            self.cfg.wrapper_kwargs_lst, []
+        )
+        for _ in range(len(self.wrapper_kwargs_lst), len(self.wrapper_cls_lst)):
+            self.wrapper_kwargs_lst.append({})
+
+        self.callback_kwargs_lst: List[Dict[str, Any]] = default(
+            self.cfg.callback_kwargs_lst, []
+        )
+        for _ in range(len(self.callback_kwargs_lst), len(self.callback_cls_lst)):
+            self.callback_kwargs_lst.append({})
+
+        self.model_kwargs: Dict[str, Any] = default(self.cfg.model_kwargs, {})
+
+        self.transfer_steps: List[int] = default(self.cfg.transfer_steps, [])
+
+        self.device: torch.device = torch.device(self.cfg.device)
+
     def single_run(self, run_id: str = "", seed: int | None = None) -> Any:
+        """Runs the rl experiment a single time with one seed.
+
+        Args:
+            run_id (str, optional): The run id. Defaults to "".
+            seed (int | None, optional): The seed. Defaults to None.
+
+        Returns:
+            Any: Any resulting metrics
+        """
         # Setup the device to train on
         if self.cfg.gpu_idx is not None:
             os.environ["CUDA_VISIBLE_DEVICES"] = str(self.cfg.gpu_idx)
-        device = torch.device(self.cfg.device)
 
         # Create the environment
         env = GeneralVecEnv(
             env_config=self.cfg.env_config,
             transfer_steps=self.cfg.transfer_steps,
-            wrappers=self.cfg.wrappers,
+            wrappers=self.wrapper_cls_lst,
             wrapper_kwargs_lst=self.cfg.wrapper_kwargs_lst,
             n_envs=self.cfg.n_envs,
-            seed=self.cfg.seed,
+            seed=seed,
             monitor_dir=self.cfg.monitor_dir,
             monitor_kwargs=self.cfg.monitor_kwargs,
             start_method=self.cfg.start_method,
@@ -46,16 +104,15 @@ class RLExperiment(BaseExperiment):
         env.reset()
 
         # Setup the model
-        model_kwargs = {} if self.cfg.model_kwargs is None else self.cfg.model_kwargs
-        model = self.cfg.model_cls(
+        model = self.model_cls(
             env=env,
-            policy=self.cfg.policy_cls,
+            policy=self.policy_cls,
             policy_kwargs=self.cfg.policy_kwargs,
-            device=device,
+            device=self.device,
             tensorboard_log=f"{self.output_directory}/logs/" if self.cfg.log else None,
-            **model_kwargs,
+            **self.model_kwargs,
         )
-        model.set_random_seed(self.cfg.seed)
+        model.set_random_seed(seed)
         model_save_path = f"{self.output_directory}/models/{run_id}/"
 
         # Instantiate the callbacks
@@ -73,14 +130,10 @@ class RLExperiment(BaseExperiment):
                     verbose=self.cfg.wandb_callback_kwargs.verbose,
                 )
             )
-        if (
-            self.cfg.callback_cls_lst is not None
-            and self.cfg.callback_kwargs_lst is not None
+        for callback_cls, callback_kwargs in zip(
+            self.callback_cls_lst, self.callback_kwargs_lst
         ):
-            for callback_cls, callback_kwargs in zip(
-                self.cfg.callback_cls_lst, self.cfg.callback_kwargs_lst
-            ):
-                callback_instances.append(callback_cls(**callback_kwargs))
+            callback_instances.append(callback_cls(**callback_kwargs))
 
         # Run the algorithm
         model.learn(
