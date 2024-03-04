@@ -1,6 +1,6 @@
 """The environment wrapper for gym to run the rl experiment."""
 
-from typing import Any, List, SupportsFloat, Tuple, Dict, Type, Union
+from typing import Any, List, SupportsFloat, Tuple, Dict, Type
 
 import os
 
@@ -67,11 +67,11 @@ class ListEnv(gym.Env):
         """
         return self.cur_env.reset(seed=seed, options=options)
 
-    def render(self) -> Union[RenderFrame, List[RenderFrame], None]:
+    def render(self) -> RenderFrame | List[RenderFrame] | None:
         """Renders the current environment.
 
         Returns:
-            Union[RenderFrame, List[RenderFrame], None]: The render return.
+            RenderFrame | List[RenderFrame] | None: The render return.
         """
         return self.cur_env.render()
 
@@ -257,7 +257,7 @@ class GeneralVecEnv(SubprocVecEnv):
         env_fns = [make_env_fn(rank=i) for i in range(n_envs)]
 
         if start_method is None:
-            start_method = "fork" if "fork" in mp.get_all_start_methods() else None
+            start_method = "spawn" if "spawn" in mp.get_all_start_methods() else None
 
         super().__init__(env_fns=env_fns, start_method=start_method)
 
