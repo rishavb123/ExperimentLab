@@ -8,7 +8,6 @@ wandb:
     project: experiments
 env_config:
     env_id: CartPole-v1
-ignore_wandb: false
 log: true
 save_model: true
 record_policy_videos: true

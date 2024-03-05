@@ -10,6 +10,7 @@ from hydra.core.hydra_config import HydraConfig
 import wandb
 import time
 import glob
+import pickle as pkl
 
 from experiment_lab.common.utils import time_f, camel_to_snake_case
 from experiment_lab.core.base_config import BaseConfig, NRunMethodEnum
@@ -42,14 +43,14 @@ class BaseExperiment(abc.ABC):
 
     @abc.abstractmethod
     def single_run(
-        self, run_id: str = "", run_output_path: str = "", seed: int | None = None
+        self, run_id: str, run_output_path: str, seed: int | None = None
     ) -> Any:
         """The entrypoint to the experiment.
 
         Args:
             run_id (str): The a unique string id for the run.
             run_output_path (str): The path to output or save anything for the run.
-            seed (int): The random seed to use for the experiment run.
+            seed (int | None, optional): The random seed to use for the experiment run. Defaults to None.
 
         Returns:
             Any: The results from this experiment run.
@@ -76,7 +77,7 @@ class BaseExperiment(abc.ABC):
         run_output_path = f"{self.output_directory}/{run_id}"
         os.makedirs(run_output_path, exist_ok=True)
 
-        if not self.cfg.ignore_wandb and self.cfg.wandb:
+        if self.cfg.wandb:
             wandb_run = wandb.init(
                 id=run_id,
                 config={
@@ -84,6 +85,7 @@ class BaseExperiment(abc.ABC):
                     "experiment_name": self.experiment_name,
                     "timestamp": self.timestamp,
                     "experiment_id": self.experiment_id,
+                    "experiment_cls": self.__class__.__name__.lower(),
                 },
                 reinit=True,
                 settings=wandb.Settings(start_method="thread"),
@@ -93,6 +95,9 @@ class BaseExperiment(abc.ABC):
         result = self.single_run(
             run_id=run_id, run_output_path=run_output_path, seed=seed
         )
+        if result is not None:
+            with open(f"{run_output_path}/result.pkl", "wb") as f:
+                pkl.dump(result, f)
         end_ns = time.time_ns()
         logger.info(
             f"Finished run with seed {seed}. Time elapsed: {(end_ns - start_ns) / 1e9}s"

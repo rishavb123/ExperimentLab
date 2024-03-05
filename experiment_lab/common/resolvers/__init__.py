@@ -11,7 +11,11 @@ from experiment_lab.common.resolvers.list_resolvers import (
     arange,
     linspace,
 )
-from experiment_lab.common.resolvers.object_resolvers import get_class
+from experiment_lab.common.resolvers.object_resolvers import (
+    get_class,
+    get_object,
+    get_method,
+)
 
 
 def register_resolvers() -> None:
