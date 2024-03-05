@@ -27,10 +27,10 @@ As a test, try running the following script:
 python experiment_lab/experiments/examples/random_waits.py n_runs=20 n_run_method=parallel seed=0
 ```
 
-For specific types of experiments or dev optional dependencies use:
+For specific optional dependencies use:
 
 ```bash
-pip install -e .[{name}]
+pip install -e ".[{name}]"
 ```
 
 where `{name}` can be `all`, `rl`, `rl-vid`, or `dev`.
