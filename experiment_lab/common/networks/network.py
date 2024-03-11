@@ -25,7 +25,7 @@ def create_network(
         constant_layer_kwargs (Dict[str, Any] | None, optional): The kwargs to pass to all the layers. Defaults to None.
         layer_activations (nn.Module | List[nn.Module  |  None] | None, optional): The activation function to use after each layer. Defaults to None.
         final_activation (nn.Module | None, optional): The activation function to use at the end. Defaults to None.
-        dropout_p (List[float  |  None] | float | None, optional): The probability of dropout for each node. Defaults to None.
+        dropout_p (List[float | None] | float | None, optional): The probability of dropout for each node. Defaults to None.
 
     Returns:
         nn.Module: The full network torch module.
