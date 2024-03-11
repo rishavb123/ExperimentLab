@@ -7,7 +7,7 @@ from experiment_lab.common.networks.network import create_network
 
 def create_mlp_network(
     layer_sizes: List[int],
-    linear_layer_cls: Type[nn.Linear] = nn.Linear,
+    linear_layer_cls: Type[nn.Module] = nn.Linear,
     constant_layer_kwargs: Dict[str, Any] | None = None,
     layer_activations: nn.Module | List[nn.Module | None] | None = None,
     final_activation: nn.Module | None = None,
@@ -17,7 +17,7 @@ def create_mlp_network(
 
     Args:
         layer_sizes (List[int]): The layer sizes to use in the network.
-        linear_layer_cls (Type[nn.Linear], optional): The linear layer class to use. Defaults to nn.Linear.
+        linear_layer_cls (Type[nn.Module], optional): The linear layer class to use. Defaults to nn.Linear.
         layer_activations (nn.Module | List[nn.Module  |  None] | None, optional): The layer activation funcitons.. Defaults to None.
         final_activation (nn.Module | None, optional): The final activation function before the output. Defaults to None.
         dropout_p (List[float  |  None] | float | None, optional): The probability of dropout per layer.. Defaults to None.
