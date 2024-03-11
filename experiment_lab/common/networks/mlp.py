@@ -1,52 +1,40 @@
 """A python module containing a basic MLP network function"""
 
-from typing import List, Type
+from typing import Any, Dict, List, Type
 from torch import nn
+from experiment_lab.common.networks.network import create_network
 
 
 def create_mlp_network(
     layer_sizes: List[int],
+    linear_layer_cls: Type[nn.Linear] = nn.Linear,
     layer_activations: nn.Module | List[nn.Module | None] | None = None,
     final_activation: nn.Module | None = None,
-    linear_layer_cls: Type[nn.Module] = nn.Linear,
+    dropout_p: List[float | None] | float | None = None,
 ) -> nn.Module:
-    """Creates an mlp network using nn.Sequential.
+    """A create multi layer percetron function.
 
     Args:
-        layer_sizes (List[int]): The sizes of all the layers (including input and output layers).
-        layer_activation_cls (nn.Module | None, optional): The activation function to use in between each row. Can be a single activation or a list. Defaults to None.
-        final_activation_cls ([nn.Module] | None, optional): The final activation function to add for the last layer. Defaults to None.
+        layer_sizes (List[int]): The layer sizes to use in the network.
+        linear_layer_cls (Type[nn.Linear], optional): The linear layer class to use. Defaults to nn.Linear.
+        layer_activations (nn.Module | List[nn.Module  |  None] | None, optional): The layer activation funcitons.. Defaults to None.
+        final_activation (nn.Module | None, optional): The final activation function before the output. Defaults to None.
+        dropout_p (List[float  |  None] | float | None, optional): The probability of dropout per layer.. Defaults to None.
 
     Returns:
         nn.Module: The mlp network.
     """
-
     assert (
-        len(layer_sizes) > 1
-    ), "Length of layers sizes must be at least 2 to contain both the inputs and the outputs of the network."
-
-    if isinstance(layer_activations, nn.Module):
-        layer_activations = [layer_activations]
-
-    mlp = nn.Sequential()
-    for i in range(len(layer_sizes) - 2):
-        mlp.append(
-            linear_layer_cls(in_features=layer_sizes[i], out_features=layer_sizes[i + 1])
-        )
-        if layer_activations is not None:
-            activation = None
-            
-            if i >= len(layer_activations):
-                activation = layer_activations[-1]
-            else:
-                if layer_activations[i] is not None:
-                    activation = layer_activations[i]
-
-            if activation is not None:
-                mlp.append(activation)
-
-    mlp.append(linear_layer_cls(in_features=layer_sizes[-2], out_features=layer_sizes[-1]))
-    if final_activation is not None:
-        mlp.append(final_activation)
-
-    return mlp
+        len(layer_sizes) >= 2
+    ), "Layer sizes must be at least 2 to include at least one layer in the network."
+    return create_network(
+        layer_cls=linear_layer_cls,
+        n_layers=len(layer_sizes) - 1,
+        layer_kwargs=[
+            dict(in_features=layer_sizes[i], out_features=layer_sizes[i + 1])
+            for i in range(len(layer_sizes) - 1)
+        ],
+        layer_activations=layer_activations,
+        final_activation=final_activation,
+        dropout_p=dropout_p,
+    )
