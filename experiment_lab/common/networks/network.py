@@ -1,4 +1,4 @@
-"""A python module containing functions to create generic networks"""
+"""A python module containing functions to create generic networks."""
 
 from typing import Any, Callable, Dict, List, Type, TypeVar
 import torch

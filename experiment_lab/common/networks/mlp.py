@@ -1,6 +1,6 @@
-"""A python module containing a basic MLP network function"""
+"""A python module containing a basic MLP network function."""
 
-from typing import Any, Dict, List, Type
+from typing import List, Type
 from torch import nn
 from experiment_lab.common.networks.network import create_network
 
