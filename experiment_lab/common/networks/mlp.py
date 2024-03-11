@@ -18,7 +18,7 @@ def create_mlp_network(
         final_activation_cls ([nn.Module] | None, optional): The final activation function to add for the last layer. Defaults to None.
 
     Returns:
-        nn.Module: _description_
+        nn.Module: The mlp network.
     """
 
     assert (
