@@ -1,4 +1,4 @@
-"""A python module containing a basic MLP network function"""
+"""A python module containing functions to create generic networks"""
 
 from typing import Any, Callable, Dict, List, Type, TypeVar
 import torch
@@ -16,6 +16,20 @@ def create_network(
     final_activation: nn.Module | None = None,
     dropout_p: List[float | None] | float | None = None,
 ) -> nn.Module:
+    """A generic create sequential network function
+
+    Args:
+        layer_cls (Type[nn.Module] | List[Type[nn.Module]  |  None] | None): The layer class type(s) to use for each layer in the network.
+        n_layers (int): The number of layers.
+        layer_kwargs (Dict[str, Any] | List[Dict[str, Any]  |  None] | None, optional): The kwargs to pass to the each layer. Defaults to None.
+        constant_layer_kwargs (Dict[str, Any] | None, optional): The kwargs to pass to all the layers. Defaults to None.
+        layer_activations (nn.Module | List[nn.Module  |  None] | None, optional): The activation function to use after each layer. Defaults to None.
+        final_activation (nn.Module | None, optional): The activation function to use at the end. Defaults to None.
+        dropout_p (List[float  |  None] | float | None, optional): The probability of dropout for each node. Defaults to None.
+
+    Returns:
+        nn.Module: The full network torch module.
+    """
 
     network = nn.Sequential()
 
@@ -61,6 +75,7 @@ def create_network(
 
 
 class ComplexNetwork(nn.Module):
+    """A class for complex multi input networks."""
 
     def __init__(
         self,
@@ -68,12 +83,27 @@ class ComplexNetwork(nn.Module):
         aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         output_module: nn.Module,
     ) -> None:
+        """The constructor for the multi input network.
+
+        Args:
+            module_lst (List[nn.Module]): The list of modules to apply before aggregation.
+            aggregator (Callable[[torch.Tensor, torch.Tensor], torch.Tensor]): The aggregator to use on the tensors.
+            output_module (nn.Module): The module to apply after aggregation.
+        """
         super().__init__()
         self.module_lst = module_lst
         self.aggregator = aggregator
         self.output_module = output_module
 
     def forward(self, xs: List[torch.Tensor]) -> torch.Tensor:
+        """The forward function of the complex network.
+
+        Args:
+            xs (List[torch.Tensor]): The inputs to the network.
+
+        Returns:
+            torch.Tensor: The output of the network.
+        """
         zs: List[torch.Tensor] = [m(x) for x, m in zip(xs, self.module_lst)]
         agg_z = zs[0]
         for z in zs[1:]:
@@ -86,4 +116,14 @@ def create_complex_network(
     aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     output_module: nn.Module,
 ) -> ComplexNetwork:
+    """Creates an instance of the complex multi input network.
+
+        Args:
+            module_lst (List[nn.Module]): The list of modules to apply before aggregation.
+            aggregator (Callable[[torch.Tensor, torch.Tensor], torch.Tensor]): The aggregator to use on the tensors.
+            output_module (nn.Module): The module to apply after aggregation.
+
+    Returns:
+        ComplexNetwork: The complex multi input network.
+    """
     return ComplexNetwork(module_lst, aggregator, output_module)
