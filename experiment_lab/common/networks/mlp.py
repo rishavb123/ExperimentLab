@@ -1,13 +1,14 @@
-"""A python module containing a basic MLP network class"""
+"""A python module containing a basic MLP network function"""
 
-from typing import List
+from typing import List, Type
 from torch import nn
 
 
 def create_mlp_network(
     layer_sizes: List[int],
-    layer_activations: nn.Module | List[nn.Module] | None = None,
+    layer_activations: nn.Module | List[nn.Module | None] | None = None,
     final_activation: nn.Module | None = None,
+    linear_layer_cls: Type[nn.Module] = nn.Linear,
 ) -> nn.Module:
     """Creates an mlp network using nn.Sequential.
 
@@ -30,16 +31,21 @@ def create_mlp_network(
     mlp = nn.Sequential()
     for i in range(len(layer_sizes) - 2):
         mlp.append(
-            nn.Linear(in_features=layer_sizes[i], out_features=layer_sizes[i + 1])
+            linear_layer_cls(in_features=layer_sizes[i], out_features=layer_sizes[i + 1])
         )
         if layer_activations is not None:
+            activation = None
+            
             if i >= len(layer_activations):
-                mlp.append(layer_activations[-1])
+                activation = layer_activations[-1]
             else:
                 if layer_activations[i] is not None:
-                    mlp.append(layer_activations[i])
+                    activation = layer_activations[i]
 
-    mlp.append(nn.Linear(in_features=layer_sizes[-2], out_features=layer_sizes[-1]))
+            if activation is not None:
+                mlp.append(activation)
+
+    mlp.append(linear_layer_cls(in_features=layer_sizes[-2], out_features=layer_sizes[-1]))
     if final_activation is not None:
         mlp.append(final_activation)
 
