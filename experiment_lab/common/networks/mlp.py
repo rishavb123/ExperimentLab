@@ -1,6 +1,6 @@
 """A python module containing a basic MLP network function."""
 
-from typing import List, Type
+from typing import Any, Dict, List, Type
 from torch import nn
 from experiment_lab.common.networks.network import create_network
 
@@ -8,6 +8,7 @@ from experiment_lab.common.networks.network import create_network
 def create_mlp_network(
     layer_sizes: List[int],
     linear_layer_cls: Type[nn.Linear] = nn.Linear,
+    constant_layer_kwargs: Dict[str, Any] | None = None,
     layer_activations: nn.Module | List[nn.Module | None] | None = None,
     final_activation: nn.Module | None = None,
     dropout_p: List[float | None] | float | None = None,
@@ -34,6 +35,7 @@ def create_mlp_network(
             dict(in_features=layer_sizes[i], out_features=layer_sizes[i + 1])
             for i in range(len(layer_sizes) - 1)
         ],
+        constant_layer_kwargs=constant_layer_kwargs,
         layer_activations=layer_activations,
         final_activation=final_activation,
         dropout_p=dropout_p,
