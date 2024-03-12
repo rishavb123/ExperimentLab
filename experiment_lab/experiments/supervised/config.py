@@ -93,6 +93,7 @@ class SupervisedConfig(BaseConfig):
     def __post_init__(self) -> None:
         """Does additional checks on the loaded config."""
         super().__post_init__()
+        assert self.num_epochs >= 0, "The number of epochs cannot be less than 0"
         assert self.train_ratio > 0, "The train ratio must be greater than 0"
         assert self.val_ratio > 0, "The val ratio must be greater than 0"
         assert self.test_ratio > 0, "The test ratio must be greater than 0"
