@@ -114,6 +114,37 @@ class AggregatedNetwork(nn.Module):
         return self.output_module(agg_z)
 
 
+class MultiNetwork(nn.Module):
+    """A class for a multi output network."""
+
+    def __init__(
+        self,
+        input_module: nn.Module,
+        module_lst: Sequence[nn.Module],
+    ) -> None:
+        """Constructor for multi output network.
+
+        Args:
+            input_module (nn.Module): The module to apply on the input.
+            module_lst (Sequence[nn.Module]): The modules to apply after input_module has been applied.
+        """
+        super().__init__()
+        self.input_module = input_module
+        self.module_lst = module_lst
+
+    def forward(self, x: torch.Tensor) -> Sequence[torch.Tensor]:
+        """The forward function of the multi output network
+
+        Args:
+            x (torch.Tensor): The input tensor.
+
+        Returns:
+            Sequence[torch.Tensor]: The outputs.
+        """
+        z = self.input_module(x)
+        return [m(z) for m in self.module_lst]
+
+
 def create_aggregated_network(
     module_lst: Sequence[nn.Module],
     aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
@@ -130,3 +161,19 @@ def create_aggregated_network(
         AggregatedNetwork: The complex multi input network.
     """
     return AggregatedNetwork(module_lst, aggregator, output_module)
+
+
+def create_multi_network(
+    input_module: nn.Module,
+    module_lst: Sequence[nn.Module],
+) -> MultiNetwork:
+    """Creates an instance of the multi output network.
+
+    Args:
+        input_module (nn.Module): The input module to apply.
+        module_lst (Sequence[nn.Module]): The sequence of modules to apply after the input_module.
+
+    Returns:
+        MultiNetwork: The complex multi output network.
+    """
+    return MultiNetwork(input_module=input_module, module_lst=module_lst)
