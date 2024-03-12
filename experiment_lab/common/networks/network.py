@@ -2,7 +2,6 @@
 
 import collections.abc
 from typing import Any, Callable, Dict, Sequence, Type, TypeVar
-from typing_extensions import get_origin
 import torch
 from torch import nn
 
