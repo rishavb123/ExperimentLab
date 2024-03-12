@@ -1,10 +1,26 @@
 """Python file containing the configs for the supervised learning experiments."""
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict
 from hydra.core.config_store import ConfigStore
 
 from experiment_lab.core.base_config import BaseConfig
+
+
+class IntervalType(Enum):
+    """The log interval type for wandb and logging"""
+
+    epochs = 0
+    batches = 1
+
+
+@dataclass
+class LoggingSchedule:
+    log_type: IntervalType = IntervalType.batches
+    log_freq: int = 0
+    wandb_log_type: IntervalType = IntervalType.batches
+    wandb_log_freq: int = 0
 
 
 @dataclass
@@ -54,12 +70,32 @@ class SupervisedConfig(BaseConfig):
         }
     )
 
+    optimizer: Dict[str, Any] = field(
+        default_factory=lambda: {
+            "_target_": "torch.optim.Adam",
+        }
+    )
+
+    scheduler: Dict[str, Any] | None = None
+
+    loss: Dict[str, Any] = field(
+        default_factory=lambda: {"_target_": "torch.nn.NLLLoss"}
+    )
+
+    num_epochs: int = 10
+
+    save_model_freq: int = 1  # Always by num epochs
+    logging_schedule: LoggingSchedule = field(default_factory=LoggingSchedule)
+
     device: str = "mps"
     gpu_idx: int | None = None
 
     def __post_init__(self) -> None:
         """Does additional checks on the loaded config."""
         super().__post_init__()
+        assert self.train_ratio > 0, "The train ratio must be greater than 0"
+        assert self.val_ratio > 0, "The val ratio must be greater than 0"
+        assert self.test_ratio > 0, "The test ratio must be greater than 0"
         assert (
             self.train_ratio + self.val_ratio + self.test_ratio == 1.0
         ), "All of the data must be split up into train, val, and test such that train_ratio + val_ratio + test_ratio == 1.0"

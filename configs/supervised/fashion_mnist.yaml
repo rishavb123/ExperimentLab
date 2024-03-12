@@ -2,47 +2,60 @@ experiment_name: fashion_mnist_supervised_experiment
 seed: 0
 n_runs: 1
 n_run_method: series
-wandb: 
+wandb:
     project: experiments
     mode: disabled
-dataset: 
+dataset:
     _target_: torch.utils.data.ConcatDataset
     datasets:
-    - _target_: torchvision.datasets.FashionMNIST
-      root: ./data/supervised/fashion_mnist
-      download: true
-      train: true
-      transform: 
-        _target_: torchvision.transforms.ToTensor
-    - _target_: torchvision.datasets.FashionMNIST
-      root: ./data/supervised/fashion_mnist
-      download: true
-      train: false
-      transform: 
-        _target_: torchvision.transforms.ToTensor
-train_ratio: 0.8
+        - _target_: torchvision.datasets.FashionMNIST
+          root: ./data/supervised/fashion_mnist
+          download: true
+          train: true
+          transform:
+              _target_: torchvision.transforms.ToTensor
+        - _target_: torchvision.datasets.FashionMNIST
+          root: ./data/supervised/fashion_mnist
+          download: true
+          train: false
+          transform:
+              _target_: torchvision.transforms.ToTensor
+train_ratio: 0.3
 val_ratio: 0.1
-test_ratio: 0.1
+test_ratio: 0.6
 data_loader_kwargs:
     batch_size: 64
+    shuffle: true
 model:
     _target_: torch.nn.Sequential
     _args_:
         - _target_: torch.nn.Flatten
         - _target_: experiment_lab.common.networks.create_mlp_network
-          layer_sizes: 
-            - 784
-            - 500
-            - 100
-            - 10
-          layer_activations: 
-            _target_: torch.nn.ReLU
-          final_activation: 
-            _target_: torch.nn.Sigmoid
+          layer_sizes:
+              - 784
+              - 500
+              - 100
+              - 10
+          layer_activations:
+              _target_: torch.nn.ReLU
+          final_activation:
+              _target_: torch.nn.Sigmoid
           dropout_p:
-            - 0.0
-            - 0.0
-            - 0.2
+              - 0.0
+              - 0.2
+optimizer:
+    _target_: torch.optim.Adam
+    lr: 0.01
+scheduler: null
+loss:
+    _target_: torch.nn.NLLLoss
+num_epochs: 3
+save_model_freq: 1
+logging_schedule:
+    log_type: batches
+    log_freq: 1
+    wandb_log_type: batches
+    wandb_log_freq: 0
 device: mps
 gpu_idx: null
 defaults:

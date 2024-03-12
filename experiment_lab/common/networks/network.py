@@ -72,7 +72,7 @@ def create_network(
             )
         if activation is not None:
             network.append(activation)
-        if dropout_p_i is not None and dropout_p_i > 0.0:
+        if i < n_layers - 1 and dropout_p_i is not None and dropout_p_i > 0.0:
             network.append(nn.Dropout(p=dropout_p_i))
 
     return network
