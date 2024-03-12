@@ -18,7 +18,7 @@ class MCConfig(BaseConfig):
 
     sampler: Dict[str, Any] = field(
         default_factory=lambda: {
-            "_target_": "experiment_lab.experiments.monte_carlo.NpAggregator"
+            "_target_": "experiment_lab.experiments.monte_carlo.UniformSampler"
         }
     )
 

@@ -1,7 +1,7 @@
 """The rl experiment python file."""
 
 import os
-from typing import Any, List, Type, Dict
+from typing import Any, Sequence, Type, Dict
 import gymnasium as gym
 import hydra
 import torch
@@ -39,7 +39,7 @@ class RLExperiment(BaseExperiment):
         super().initialize_experiment()
 
         self.model_cls: Type[BaseAlgorithm] = hydra.utils.get_class(self.cfg.model_cls)
-        self.wrapper_cls_lst: List[Type[gym.Wrapper]] = (
+        self.wrapper_cls_lst: Sequence[Type[gym.Wrapper]] = (
             []
             if self.cfg.wrapper_cls_lst is None
             else [
@@ -48,7 +48,7 @@ class RLExperiment(BaseExperiment):
             ]
         )
         self.policy_cls: Type[BasePolicy] = hydra.utils.get_class(self.cfg.policy_cls)
-        self.callback_cls_lst: List[Type[BaseCallback]] = (
+        self.callback_cls_lst: Sequence[Type[BaseCallback]] = (
             []
             if self.cfg.callback_cls_lst is None
             else [
@@ -57,13 +57,13 @@ class RLExperiment(BaseExperiment):
             ]
         )
 
-        self.wrapper_kwargs_lst: List[Dict[str, Any]] = default(
+        self.wrapper_kwargs_lst: Sequence[Dict[str, Any]] = default(
             self.cfg.wrapper_kwargs_lst, []
         )
         for _ in range(len(self.wrapper_kwargs_lst), len(self.wrapper_cls_lst)):
             self.wrapper_kwargs_lst.append({})
 
-        self.callback_kwargs_lst: List[Dict[str, Any]] = default(
+        self.callback_kwargs_lst: Sequence[Dict[str, Any]] = default(
             self.cfg.callback_kwargs_lst, []
         )
         for _ in range(len(self.callback_kwargs_lst), len(self.callback_cls_lst)):
@@ -71,7 +71,7 @@ class RLExperiment(BaseExperiment):
 
         self.model_kwargs: Dict[str, Any] = default(self.cfg.model_kwargs, {})
 
-        self.transfer_steps: List[int] = default(self.cfg.transfer_steps, [])
+        self.transfer_steps: Sequence[int] = default(self.cfg.transfer_steps, [])
 
         self.device: torch.device = torch.device(self.cfg.device)
 

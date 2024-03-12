@@ -1,26 +1,26 @@
 """A python module containing a basic MLP network function."""
 
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, Sequence, Type
 from torch import nn
 from experiment_lab.common.networks.network import create_network
 
 
 def create_mlp_network(
-    layer_sizes: List[int],
+    layer_sizes: Sequence[int],
     linear_layer_cls: Type[nn.Module] = nn.Linear,
     constant_layer_kwargs: Dict[str, Any] | None = None,
-    layer_activations: nn.Module | List[nn.Module | None] | None = None,
+    layer_activations: nn.Module | Sequence[nn.Module | None] | None = None,
     final_activation: nn.Module | None = None,
-    dropout_p: List[float | None] | float | None = None,
+    dropout_p: Sequence[float | None] | float | None = None,
 ) -> nn.Module:
     """A create multi layer percetron function.
 
     Args:
-        layer_sizes (List[int]): The layer sizes to use in the network.
+        layer_sizes (Sequence[int]): The layer sizes to use in the network.
         linear_layer_cls (Type[nn.Module], optional): The linear layer class to use. Defaults to nn.Linear.
-        layer_activations (nn.Module | List[nn.Module  |  None] | None, optional): The layer activation funcitons.. Defaults to None.
+        layer_activations (nn.Module | Sequence[nn.Module  |  None] | None, optional): The layer activation funcitons.. Defaults to None.
         final_activation (nn.Module | None, optional): The final activation function before the output. Defaults to None.
-        dropout_p (List[float  |  None] | float | None, optional): The probability of dropout per layer.. Defaults to None.
+        dropout_p (Sequence[float  |  None] | float | None, optional): The probability of dropout per layer.. Defaults to None.
 
     Returns:
         nn.Module: The mlp network.
