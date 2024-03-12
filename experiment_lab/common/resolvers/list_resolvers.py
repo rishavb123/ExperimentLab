@@ -1,6 +1,6 @@
 """List resolvers for easily generating lists in config files"""
 
-from typing import Any, Callable, List
+from typing import Any, Callable, Sequence
 import numpy as np
 
 
@@ -11,13 +11,13 @@ def wrap_f(f: Callable):
         f (Callable): The function to wrap.
     """
 
-    def g(*args, **kwargs) -> List[Any]:
+    def g(*args, **kwargs) -> Sequence[Any]:
         return list(f(*args, **kwargs))
 
     return g
 
 
-def dup(n: int, x: Any) -> List[Any]:
+def dup(n: int, x: Any) -> Sequence[Any]:
     """Duplicates x into a list of length n.
 
     Args:
@@ -25,25 +25,25 @@ def dup(n: int, x: Any) -> List[Any]:
         x (Any): The value to duplicate.
 
     Returns:
-        List[Any]: The list containing x, n times.
+        Sequence[Any]: The list containing x, n times.
     """
     return [x for _ in range(n)]
 
 
-def wrap_around(n: int, lst: List[Any]) -> List[Any]:
+def wrap_around(n: int, lst: Sequence[Any]) -> Sequence[Any]:
     """Generates a list of length n by iterating through lst and wrapping around if the values run out.
 
     Args:
         n (int): The length of the resulting list.
-        lst (List[Any]): The list to iterate through.
+        lst (Sequence[Any]): The list to iterate through.
 
     Returns:
-        List[Any]: The list wrapping around lst.
+        Sequence[Any]: The list wrapping around lst.
     """
     return [lst[i % len(lst)] for i in range(n)]
 
 
-def toggle(n: int, fst: Any = False, snd: Any = True) -> List[Any]:
+def toggle(n: int, fst: Any = False, snd: Any = True) -> Sequence[Any]:
     """Toggles between two values until a list of length n is generated.
 
     Args:
@@ -52,7 +52,7 @@ def toggle(n: int, fst: Any = False, snd: Any = True) -> List[Any]:
         snd (Any, optional): The second (and fourth, sixth, ...) value to use. Defaults to True.
 
     Returns:
-        List[Any]: The resulting list toggling between the two values.
+        Sequence[Any]: The resulting list toggling between the two values.
     """
     return wrap_around(n=n, lst=[fst, snd])
 

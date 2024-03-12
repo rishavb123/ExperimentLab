@@ -1,6 +1,6 @@
 """The file to hold the base experiment code."""
 
-from typing import Any, List, Tuple
+from typing import Any, Sequence, Tuple
 
 import abc
 import os
@@ -118,7 +118,7 @@ class BaseExperiment(abc.ABC):
         return result
 
     @time_f
-    def run(self) -> List[Any]:
+    def run(self) -> Sequence[Any]:
         """Runs the experiment multiple times in series and aggregates the results.
 
         Args:
@@ -126,7 +126,7 @@ class BaseExperiment(abc.ABC):
             seed (int | None, optional): The initial seed of the first experiment run. The seeds of further experiment runs increment by 1 each run. Defaults to None.
 
         Returns:
-            List[Any]: The list of results from the runs.
+            Sequence[Any]: The list of results from the runs.
         """
         results = None
         if self.cfg.n_runs <= 1 or self.cfg.n_run_method == NRunMethodEnum.series:

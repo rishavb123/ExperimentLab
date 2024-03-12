@@ -2,7 +2,7 @@
 
 import os
 
-from typing import Any, Callable, Type, List
+from typing import Any, Callable, Type, Sequence
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
@@ -18,7 +18,7 @@ def run_experiment(
     register_resolvers: Callable[[], None] = register_resolvers,
     config_path: str = "./configs",
     config_name: str = "config",
-) -> List[Any]:
+) -> Sequence[Any]:
     """The main entrypoint to collect all the hydra config and run the experiment.
 
     Args:
@@ -30,7 +30,7 @@ def run_experiment(
         config_name (str, optional): The default config name. Defaults to "config".
 
     Returns:
-        List[Any]: The list of results from the runs.
+        Sequence[Any]: The list of results from the runs.
     """
     register_resolvers()
     register_configs()
@@ -38,7 +38,7 @@ def run_experiment(
     config_path = os.path.join(os.getcwd(), config_path)
 
     @hydra.main(config_path=config_path, config_name=config_name, version_base=None)
-    def main(dict_cfg: DictConfig) -> List[Any]:
+    def main(dict_cfg: DictConfig) -> Sequence[Any]:
         OmegaConf.resolve(dict_cfg)
         cfg: config_cls = OmegaConf.to_object(dict_cfg)  # type: ignore
         e = experiment_cls(cfg)

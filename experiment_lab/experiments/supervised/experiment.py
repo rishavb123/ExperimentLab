@@ -69,7 +69,3 @@ class SupervisedExperiment(BaseExperiment):
         )
 
         model = hydra.utils.instantiate(self.cfg.model)
-
-        import pdb
-
-        pdb.set_trace()
