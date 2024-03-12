@@ -46,6 +46,8 @@ class MCExperiment(BaseExperiment):
         Returns:
             Any: The post processed results.
         """
+
+        # Instantiate the required experiment components
         sampler: BaseSampler = hydra.utils.instantiate(self.cfg.sampler)
         aggregator: BaseAggregator = hydra.utils.instantiate(self.cfg.aggregator)
         sample_filter: BaseSampleFilter = hydra.utils.instantiate(
@@ -55,8 +57,10 @@ class MCExperiment(BaseExperiment):
             self.cfg.post_processor
         )
 
+        # Set the seed
         sampler.set_seed(seed=seed)
 
+        # Sample, Filter, Aggregate, and Post Process, all while logging
         all_samples = None
         results = None
         for i in range(0, self.cfg.n_samples, self.batch_size):
