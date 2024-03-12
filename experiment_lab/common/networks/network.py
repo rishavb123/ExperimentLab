@@ -1,6 +1,7 @@
 """A python module containing functions to create generic networks."""
 
 from typing import Any, Callable, Dict, List, Type, TypeVar
+from typing_extensions import get_origin
 import torch
 from torch import nn
 
@@ -48,6 +49,8 @@ def create_network(
                 val = lst[i]
             else:
                 val = lst[-1]
+        else:
+            val = lst  # type: ignore
         if val is None:
             return default_value
         else:
