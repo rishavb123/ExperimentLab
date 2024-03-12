@@ -69,6 +69,7 @@ class SupervisedConfig(BaseConfig):
             ],
         }
     )
+    load_model_path: str | None = None
 
     optimizer: Dict[str, Any] = field(
         default_factory=lambda: {

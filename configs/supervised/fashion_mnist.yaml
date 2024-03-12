@@ -62,13 +62,14 @@ model:
           dropout_p:
               - 0.0
               - 0.2
+load_model_path: ./outputs/2024-03-12/14-36-41/fashion_mnist_supervised_experiment_1710268601_0_1/models/final_model_epoch_3.pl
 optimizer:
     _target_: torch.optim.Adam
     lr: 0.01
 scheduler: null
 loss:
     _target_: torch.nn.NLLLoss
-num_epochs: 3
+num_epochs: 0
 save_model_freq: 1
 logging_schedule:
     log_type: batches

@@ -133,6 +133,8 @@ class SupervisedExperiment(BaseExperiment):
 
         # Setting up model
         model: nn.Module = hydra.utils.instantiate(self.cfg.model).to(self.device)
+        if self.cfg.load_model_path is not None:
+            model.load_state_dict(torch.load(self.cfg.load_model_path))
 
         # Setting up optimizer
         optimizer: optim.Optimizer = hydra.utils.instantiate(
