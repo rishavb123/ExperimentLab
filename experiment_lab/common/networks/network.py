@@ -77,8 +77,8 @@ def create_network(
     return network
 
 
-class ComplexNetwork(nn.Module):
-    """A class for complex multi input networks."""
+class AggregatedNetwork(nn.Module):
+    """A class for aggregated multi input networks."""
 
     def __init__(
         self,
@@ -99,7 +99,7 @@ class ComplexNetwork(nn.Module):
         self.output_module = output_module
 
     def forward(self, xs: Sequence[torch.Tensor]) -> torch.Tensor:
-        """The forward function of the complex network.
+        """The forward function of the aggregated network.
 
         Args:
             xs (Sequence[torch.Tensor]): The inputs to the network.
@@ -114,11 +114,11 @@ class ComplexNetwork(nn.Module):
         return self.output_module(agg_z)
 
 
-def create_complex_network(
+def create_aggregated_network(
     module_lst: Sequence[nn.Module],
     aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     output_module: nn.Module,
-) -> ComplexNetwork:
+) -> AggregatedNetwork:
     """Creates an instance of the complex multi input network.
 
         Args:
@@ -127,6 +127,6 @@ def create_complex_network(
             output_module (nn.Module): The module to apply after aggregation.
 
     Returns:
-        ComplexNetwork: The complex multi input network.
+        AggregatedNetwork: The complex multi input network.
     """
-    return ComplexNetwork(module_lst, aggregator, output_module)
+    return AggregatedNetwork(module_lst, aggregator, output_module)
