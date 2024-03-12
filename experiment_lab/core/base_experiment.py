@@ -1,5 +1,6 @@
 """The file to hold the base experiment code."""
 
+from dataclasses import asdict
 from typing import Any, Sequence, Tuple
 
 import abc
@@ -7,6 +8,7 @@ import os
 import logging
 import multiprocessing as mp
 from hydra.core.hydra_config import HydraConfig
+from omegaconf import OmegaConf
 import wandb
 import time
 import glob
@@ -81,7 +83,7 @@ class BaseExperiment(abc.ABC):
             wandb_run = wandb.init(
                 id=run_id,
                 config={
-                    **self.cfg.__dict__,
+                    **asdict(self.cfg),
                     "experiment_name": self.experiment_name,
                     "timestamp": self.timestamp,
                     "experiment_id": self.experiment_id,
