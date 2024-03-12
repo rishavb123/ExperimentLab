@@ -20,9 +20,9 @@ dataset:
           train: false
           transform:
               _target_: torchvision.transforms.ToTensor
-train_ratio: 0.3
-val_ratio: 0.1
-test_ratio: 0.6
+train_ratio: 0.7
+val_ratio: 0.15
+test_ratio: 0.15
 data_loader_kwargs:
     batch_size: 64
     shuffle: true
@@ -75,9 +75,9 @@ loss:
 num_epochs: 3
 save_model_freq: 1
 logging_schedule:
-    log_type: batches
+    log_type: batches_and_epochs
     log_freq: 1
-    wandb_log_type: batches
+    wandb_log_type: batches_and_epochs
     wandb_log_freq: 1
 device: mps
 gpu_idx: null

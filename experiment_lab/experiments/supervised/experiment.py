@@ -66,7 +66,11 @@ class SupervisedExperiment(BaseExperiment):
                 if scheduler is not None:
                     scheduler.step()
                 if (
-                    self.cfg.logging_schedule.log_type == IntervalType.batches
+                    (
+                        self.cfg.logging_schedule.log_type == IntervalType.batches
+                        or self.cfg.logging_schedule.log_type
+                        == IntervalType.batches_and_epochs
+                    )
                     and self.cfg.logging_schedule.log_freq > 0
                     and batch_idx % self.cfg.logging_schedule.log_freq == 0
                 ):
@@ -74,7 +78,11 @@ class SupervisedExperiment(BaseExperiment):
                         f"epoch {epoch} / {self.cfg.num_epochs}; batch {batch_idx} / {num_batches} - train loss: {loss_val.item()};"
                     )
                 if (
-                    self.cfg.logging_schedule.wandb_log_type == IntervalType.batches
+                    (
+                        self.cfg.logging_schedule.wandb_log_type == IntervalType.batches
+                        or self.cfg.logging_schedule.wandb_log_type
+                        == IntervalType.batches_and_epochs
+                    )
                     and self.cfg.logging_schedule.wandb_log_freq > 0
                     and batch_idx % self.cfg.logging_schedule.wandb_log_freq == 0
                 ):
@@ -187,7 +195,11 @@ class SupervisedExperiment(BaseExperiment):
                 )
 
             if (
-                self.cfg.logging_schedule.log_type == IntervalType.batches
+                (
+                    self.cfg.logging_schedule.log_type == IntervalType.epochs
+                    or self.cfg.logging_schedule.log_type
+                    == IntervalType.batches_and_epochs
+                )
                 and self.cfg.logging_schedule.log_freq > 0
                 and epoch % self.cfg.logging_schedule.log_freq == 0
             ):
@@ -195,7 +207,11 @@ class SupervisedExperiment(BaseExperiment):
                     f"epoch {epoch} / {self.cfg.num_epochs}; - train loss: {train_loss.item()}; val_loss: {validation_loss.item()}; test_loss: {test_loss.item()}"
                 )
             if (
-                self.cfg.logging_schedule.wandb_log_type == IntervalType.batches
+                (
+                    self.cfg.logging_schedule.wandb_log_type == IntervalType.epochs
+                    or self.cfg.logging_schedule.wandb_log_type
+                    == IntervalType.batches_and_epochs
+                )
                 and self.cfg.logging_schedule.wandb_log_freq > 0
                 and epoch % self.cfg.logging_schedule.wandb_log_freq == 0
             ):

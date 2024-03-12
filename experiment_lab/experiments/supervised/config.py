@@ -11,8 +11,9 @@ from experiment_lab.core.base_config import BaseConfig
 class IntervalType(Enum):
     """The log interval type for wandb and logging"""
 
-    epochs = 0
-    batches = 1
+    batches = 0
+    epochs = 1
+    batches_and_epochs = 2
 
 
 @dataclass
