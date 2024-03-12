@@ -2,6 +2,7 @@
 
 import collections.abc
 from typing import Any, Callable, Dict, Sequence, Type, TypeVar
+import hydra
 import torch
 from torch import nn
 
@@ -9,7 +10,7 @@ from experiment_lab.common.utils import default
 
 
 def create_network(
-    layer_cls: Type[nn.Module] | Sequence[Type[nn.Module] | None] | None,
+    layer_cls: str | Type[nn.Module] | Sequence[Type[nn.Module] | str | None] | None,
     n_layers: int,
     layer_kwargs: Dict[str, Any] | Sequence[Dict[str, Any] | None] | None = None,
     constant_layer_kwargs: Dict[str, Any] | None = None,
@@ -44,7 +45,7 @@ def create_network(
         val: T | None = None
         if lst is None:
             val = default_value
-        elif isinstance(lst, collections.abc.Sequence):
+        elif isinstance(lst, collections.abc.Sequence) and type(lst) != str:
             if i < len(lst):
                 val = lst[i]
             else:
@@ -58,6 +59,8 @@ def create_network(
 
     for i in range(n_layers):
         layer_cls_i = get_from_lst(lst=layer_cls, i=i)
+        if isinstance(layer_cls_i, str):
+            layer_cls_i = hydra.utils.get_class(layer_cls_i)
         layer_kwargs_i = get_from_lst(lst=layer_kwargs, i=i, default_value={})
         dropout_p_i = get_from_lst(lst=dropout_p, i=i)
         activation = (
