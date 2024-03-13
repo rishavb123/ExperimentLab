@@ -7,6 +7,7 @@ import os
 import gymnasium as gym
 from gymnasium.core import RenderFrame
 from gymnasium.envs.registration import EnvSpec
+import hydra
 import numpy as np
 import multiprocessing as mp
 
@@ -191,6 +192,10 @@ class GeneralVecEnv(SubprocVecEnv):
                     for k, v in env_config.items()
                 }
             )
+
+        for cfg in env_configs:
+            if isinstance(cfg["env_id"], str) and cfg["env_id"] not in gym.registry:
+                cfg["env_id"] = hydra.utils.get_class(cfg["env_id"])
 
         env_spec_mapping = {
             cfg["env_id"]: gym.registry[cfg["env_id"]]
