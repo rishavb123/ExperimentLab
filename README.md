@@ -35,6 +35,12 @@ pip install -e ".[{name}]"
 
 where `{name}` can be `all`, `rl`, `rl-vid`, or `dev`.
 
+To just install the experiment runner framework in one command:
+
+```bash
+pip install git+https://github.com/rishavb123/ExperimentLab.git
+```
+
 ### Debugging Tips
 
 #### Recording Videos on RL experiments
