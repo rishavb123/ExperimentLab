@@ -1,0 +1,22 @@
+experiment_name: simple_to_lava_crossing_rl_experiment
+total_time_steps: 500000
+n_runs: 1
+n_envs: 5
+n_run_method: series
+seed: 0
+wandb:
+    project: experiments
+env_config:
+    env_id:
+        - MiniGrid-SimpleCrossingS9N2-v0
+        - MiniGrid-LavaCrossingS9N2-v0
+    transfer_steps:
+        - 200000
+log: true
+save_model: true
+record_policy_videos: true
+video_freq: 50000
+video_length: 200
+defaults:
+    - rl_config
+    - _self_
