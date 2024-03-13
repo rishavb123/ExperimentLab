@@ -40,7 +40,7 @@ class RandomWaits(BaseExperiment):
         num = rng.integers(10)
         if self.cfg.wandb:
             wandb.log({"num": num})
-        time.sleep(rng.integers(num))
+        time.sleep(num)
         logger.info("Done!")
 
 
