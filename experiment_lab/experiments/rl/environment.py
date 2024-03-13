@@ -1,6 +1,6 @@
 """The environment wrapper for gym to run the rl experiment."""
 
-from typing import Any, Sequence, SupportsFloat, Tuple, Dict, Type
+from typing import Any, List, Sequence, SupportsFloat, Tuple, Dict, Type
 
 import os
 
@@ -156,7 +156,7 @@ class GeneralVecEnv(SubprocVecEnv):
         env_config: Dict[str, Any],
         transfer_steps: Sequence[int] | None = None,
         wrappers: Sequence[Type[gym.Wrapper]] | None = [],
-        wrapper_kwargs_lst: Sequence[Dict[str, Any]] | None = [],
+        wrapper_kwargs_lst: List[Dict[str, Any]] | None = [],
         n_envs: int = 1,
         seed: int | None = None,
         monitor_dir: str | None = None,
