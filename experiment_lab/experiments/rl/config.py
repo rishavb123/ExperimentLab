@@ -1,7 +1,7 @@
 """Python file containing the configs for rl experiments."""
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, List
 from hydra.core.config_store import ConfigStore
 
 from experiment_lab.core.base_config import BaseConfig
@@ -22,13 +22,13 @@ class RLConfig(BaseConfig):
     env_config: Dict[str, Any] = field(
         default_factory=lambda: {"env_id": "CartPole-v1"}
     )
-    transfer_steps: Sequence[int] | None = None
+    transfer_steps: List[int] | None = None
 
     total_time_steps: int = 10_000
     n_envs: int = 1
 
-    wrapper_cls_lst: Sequence[str] | None = None
-    wrapper_kwargs_lst: Sequence[Dict[str, Any]] | None = None
+    wrapper_cls_lst: List[str] | None = None
+    wrapper_kwargs_lst: List[Dict[str, Any]] | None = None
 
     model_cls: str = "stable_baselines3.PPO"
     model_kwargs: Dict[str, Any] | None = None
@@ -36,8 +36,8 @@ class RLConfig(BaseConfig):
     policy_cls: str = "stable_baselines3.ppo.MlpPolicy"
     policy_kwargs: Dict[str, Any] | None = None
 
-    callback_cls_lst: Sequence[str] | None = None
-    callback_kwargs_lst: Sequence[Dict[str, Any]] | None = None
+    callback_cls_lst: List[str] | None = None
+    callback_kwargs_lst: List[Dict[str, Any]] | None = None
     wandb_callback_kwargs: WandbCallbackConfig | None = field(
         default_factory=WandbCallbackConfig
     )

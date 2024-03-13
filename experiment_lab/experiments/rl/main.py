@@ -1,5 +1,7 @@
 """Main entrypoint to run generic rl experiments."""
 
+import minigrid
+
 from experiment_lab.core.runner import run_experiment
 from experiment_lab.experiments.rl.experiment import RLExperiment
 from experiment_lab.experiments.rl.config import RLConfig, register_configs
