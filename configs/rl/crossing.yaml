@@ -1,5 +1,4 @@
 experiment_name: simple_to_lava_crossing_rl_experiment
-total_time_steps: 5000000
 n_runs: 10
 n_envs: 4
 n_run_method: series
@@ -13,6 +12,7 @@ env_config:
         - MiniGrid-LavaCrossingS9N2-v0
 wrapper_cls_lst:
     - minigrid.wrappers.ImgObsWrapper
+total_time_steps: 5000000
 transfer_steps:
     - 2000000
 log: true
