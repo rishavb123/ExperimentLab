@@ -6,6 +6,7 @@ n_run_method: series
 seed: 0
 wandb:
     project: experiments
+    mode: disabled
 env_config:
     env_id:
         - MiniGrid-SimpleCrossingS9N2-v0
