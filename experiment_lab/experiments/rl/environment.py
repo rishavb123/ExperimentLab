@@ -1,6 +1,6 @@
 """The environment wrapper for gym to run the rl experiment."""
 
-from typing import Any, List, Sequence, SupportsFloat, Tuple, Dict, Type
+from typing import Any, List, SupportsFloat, Tuple, Dict, Type
 
 import os
 
@@ -18,11 +18,11 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnvStepReturn
 class ListEnv(gym.Env):
     """An environment for maintaining multiple transfers."""
 
-    def __init__(self, env_lst: Sequence[gym.Env]) -> None:
+    def __init__(self, env_lst: List[gym.Env]) -> None:
         """The constructor for the list env class.
 
         Args:
-            env_lst (Sequence[gym.Env]): The list of environments to use.
+            env_lst (List[gym.Env]): The list of environments to use.
         """
         self.env_lst = env_lst
         self.env_idx = 0
@@ -154,8 +154,8 @@ class GeneralVecEnv(SubprocVecEnv):
     def __init__(
         self,
         env_config: Dict[str, Any],
-        transfer_steps: Sequence[int] | None = None,
-        wrappers: Sequence[Type[gym.Wrapper]] | None = [],
+        transfer_steps: List[int] | None = None,
+        wrappers: List[Type[gym.Wrapper]] | None = [],
         wrapper_kwargs_lst: List[Dict[str, Any]] | None = [],
         n_envs: int = 1,
         seed: int | None = None,
@@ -168,9 +168,9 @@ class GeneralVecEnv(SubprocVecEnv):
 
         Args:
             env_config (Dict[str, Any]): The environment config to use.
-            transfer_steps (Sequence[int] | None, optional): The number of steps to run before each transfer specified in the environment config. Defaults to None.
-            wrappers (Sequence[Type[gym.Wrapper]] | None, optional): The wrappers to apply to the env. Defaults to [].
-            wrapper_kwargs_lst (Sequence[Dict[str, Any]] | None, optional): The kwargs for the wrappers. Defaults to [].
+            transfer_steps (List[int] | None, optional): The number of steps to run before each transfer specified in the environment config. Defaults to None.
+            wrappers (List[Type[gym.Wrapper]] | None, optional): The wrappers to apply to the env. Defaults to [].
+            wrapper_kwargs_lst (List[Dict[str, Any]] | None, optional): The kwargs for the wrappers. Defaults to [].
             n_envs (int, optional): The number of envs to run in parallel. Defaults to 1.
             seed (int | None, optional): The seed to use. Defaults to None.
             monitor_dir (str | None, optional): The directory to save monitor logs to. Defaults to None.
@@ -280,7 +280,7 @@ class GeneralVecEnv(SubprocVecEnv):
         ):
             self.last_incr = self.total_time_steps
             # Trigger the novelty if enough steps have passed
-            transfer_injected: Sequence[bool] = self.env_method("incr_env_idx")
+            transfer_injected: List[bool] = self.env_method("incr_env_idx")
             if np.any(transfer_injected):
                 self.cur_env_idx += 1
                 dones[:] = True
