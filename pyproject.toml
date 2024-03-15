@@ -8,6 +8,7 @@ description = "A novelty experimentation wrapper for minigrid"
 keywords = ["experiment", "suite", "lab"]
 authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
 readme = "README.md"
+license = { file = "LICENSE" }
 dynamic = ["version"]
 requires-python = ">=3.11"
 dependencies = [
