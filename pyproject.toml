@@ -3,7 +3,7 @@ requires = ["setuptools >= 61.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ExperimentLab"
+name = "experiment_lab"
 description = "A novelty experimentation wrapper for minigrid"
 keywords = ["experiment", "suite", "lab"]
 authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
@@ -28,7 +28,7 @@ all = ["gymnasium", "stable_baselines3", "moviepy", "torchvision", "minigrid"]
 rl = ["gymnasium", "stable_baselines3", "minigrid"]
 rl-vid = ["moviepy"]
 ml = ["torchvision"]
-dev = ["pytest", "black"]
+dev = ["pytest", "black", "build", "twine"]
 
 [tool.setuptools]
 packages = ["experiment_lab"]
