@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "experiment-lab"
-description = "A novelty experimentation wrapper for minigrid"
+description = "A suite of flexible experiments of a variety of different tasks."
 keywords = ["experiment", "suite", "lab"]
 authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
 readme = "README.md"
@@ -30,5 +30,7 @@ rl-vid = ["moviepy"]
 ml = ["torchvision"]
 dev = ["pytest", "black", "build", "twine"]
 
-[tool.setuptools]
-packages = ["experiment_lab"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["experiment_lab*"]
+namespaces = false
