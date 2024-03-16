@@ -1,13 +1,14 @@
 [build-system]
-build-backend = "setuptools.build_meta"
 requires = ["setuptools >= 61.0.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "ExperimentLab"
-description = "A novelty experimentation wrapper for minigrid"
+name = "experiment-lab"
+description = "A suite of flexible experiments of a variety of different tasks."
 keywords = ["experiment", "suite", "lab"]
 authors = [{ name = "Rishav Bhagat", email = "rishavbhagat.cs@gmail.com" }]
 readme = "README.md"
+license = { file = "LICENSE" }
 dynamic = ["version"]
 requires-python = ">=3.11"
 dependencies = [
@@ -27,7 +28,9 @@ all = ["gymnasium", "stable_baselines3", "moviepy", "torchvision", "minigrid"]
 rl = ["gymnasium", "stable_baselines3", "minigrid"]
 rl-vid = ["moviepy"]
 ml = ["torchvision"]
-dev = ["pytest", "black"]
+dev = ["pytest", "black", "build", "twine"]
 
-[tool.setuptools]
-packages = ["experiment_lab"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["experiment_lab*"]
+namespaces = false
