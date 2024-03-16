@@ -1,3 +1,3 @@
 """The intialization folder for the full library"""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1a"
