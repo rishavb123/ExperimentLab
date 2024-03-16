@@ -36,7 +36,6 @@ class RLExperiment(BaseExperiment):
         """Initializes the rl experiment"""
         super().initialize_experiment()
 
-        self.model_cls: Type[BaseAlgorithm] = hydra.utils.get_class(self.cfg.model_cls)
         self.wrapper_cls_lst: List[Type[gym.Wrapper]] = (
             []
             if self.cfg.wrapper_cls_lst is None
@@ -126,7 +125,10 @@ class RLExperiment(BaseExperiment):
         env.reset()
 
         # Setup the model
-        model = self.model_cls(
+        model = hydra.utils.instantiate(
+            {
+                "_target_": self.cfg.model_cls,
+            },
             env=env,
             policy=self.policy_cls,
             policy_kwargs=self.cfg.policy_kwargs,
