@@ -1,6 +1,6 @@
 """Main entrypoint to run generic monte carlo experiments."""
 
-from experiment_lab.core.runner import run_experiment
+from experiment_lab.core.runner import run_experiment, root_config_folder
 from experiment_lab.experiments.monte_carlo.experiment import MCExperiment
 from experiment_lab.experiments.monte_carlo.config import MCConfig, register_configs
 
@@ -12,7 +12,7 @@ run_mc_experiment = partial(
     experiment_cls=MCExperiment,
     config_cls=MCConfig,
     register_configs=register_configs,
-    config_path="./configs/mc",
+    config_path=f"{root_config_folder}/mc",
 )
 
 

@@ -6,9 +6,12 @@ from typing import Any, Callable, Type, Sequence
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
+import experiment_lab
 from experiment_lab.common.resolvers import register_resolvers
 from experiment_lab.core.base_config import BaseConfig, register_configs
 from experiment_lab.core.base_experiment import BaseExperiment
+
+root_config_folder = f"{os.path.dirname(experiment_lab.__file__)}/configs"
 
 
 def run_experiment(
@@ -16,7 +19,7 @@ def run_experiment(
     config_cls: Type[BaseConfig] = BaseConfig,
     register_configs: Callable[[], None] = register_configs,
     register_resolvers: Callable[[], None] = register_resolvers,
-    config_path: str = "./configs",
+    config_path: str = root_config_folder,
     config_name: str = "config",
 ) -> Sequence[Any]:
     """The main entrypoint to collect all the hydra config and run the experiment.
