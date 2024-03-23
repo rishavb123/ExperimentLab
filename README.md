@@ -13,7 +13,35 @@ conda activate experiment_lab
 
 Install the version of pytorch that is compatible with your hardware using the pip or conda command from their [website](https://pytorch.org/get-started/locally/).
 
-Then to install this package and its dependencies use the following commands:
+To just install the experiment runner framework in one command:
+
+```bash
+pip install experiment-lab
+```
+
+or
+
+```bash
+pip install git+https://github.com/rishavb123/ExperimentLab.git
+```
+
+For specific optional dependencies use:
+
+```bash
+pip install -e "experiment-lab[{name}]"
+```
+
+where `{name}` can be `all`, `ml`, `rl`, `rl-vid`, or `dev`.
+
+To test this installation, try this command (after logging into wandb with `wandb login`):
+
+```bash
+run_mc --config-name estimate_pi
+```
+
+which should run a monte carlo experiment to estimate the value of pi. See the experiments project in wandb to view the results of this experiment.
+
+To install this package directly from the github reposity use the following commands:
 
 ```bash
 git clone https://github.com/rishavb123/ExperimentLab.git
@@ -33,13 +61,7 @@ For specific optional dependencies use:
 pip install -e ".[{name}]"
 ```
 
-where `{name}` can be `all`, `rl`, `rl-vid`, or `dev`.
-
-To just install the experiment runner framework in one command:
-
-```bash
-pip install git+https://github.com/rishavb123/ExperimentLab.git
-```
+where `{name}` can be `all`, `ml`, `rl`, `rl-vid`, or `dev`.
 
 ### Debugging Tips
 

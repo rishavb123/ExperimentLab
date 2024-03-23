@@ -2,7 +2,7 @@
 
 import minigrid
 
-from experiment_lab.core.runner import run_experiment
+from experiment_lab.core.runner import run_experiment, root_config_folder
 from experiment_lab.experiments.rl.experiment import RLExperiment
 from experiment_lab.experiments.rl.config import RLConfig, register_configs
 
@@ -14,7 +14,7 @@ run_rl_experiment = partial(
     experiment_cls=RLExperiment,
     config_cls=RLConfig,
     register_configs=register_configs,
-    config_path="./configs/rl",
+    config_path=f"{root_config_folder}/rl",
 )
 
 
