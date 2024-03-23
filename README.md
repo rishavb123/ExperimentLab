@@ -38,6 +38,12 @@ where `{name}` can be `all`, `rl`, `rl-vid`, or `dev`.
 To just install the experiment runner framework in one command:
 
 ```bash
+pip install experiment-lab
+```
+
+or
+
+```bash
 pip install git+https://github.com/rishavb123/ExperimentLab.git
 ```
 
