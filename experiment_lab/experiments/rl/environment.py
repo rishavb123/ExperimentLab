@@ -220,7 +220,9 @@ class GeneralVecEnv(SubprocVecEnv):
         def make_env_fn(rank):
             def _make_env(config):
                 env_id = config["env_id"]
-                env_kwargs = {k: v for k, v in config.items() if k != "env_id"}
+                env_kwargs = hydra.utils.instantiate(
+                    {k: v for k, v in config.items() if k != "env_id"}
+                )
 
                 # Initialize the environment
                 if isinstance(env_id, str):
@@ -245,11 +247,15 @@ class GeneralVecEnv(SubprocVecEnv):
                 # Create the monitor folder if needed
                 if monitor_path is not None:
                     os.makedirs(monitor_path, exist_ok=True)
-                env = Monitor(env, filename=monitor_path, **monitor_kwargs)
+                env = Monitor(
+                    env,
+                    filename=monitor_path,
+                    **hydra.utils.instantiate(monitor_kwargs),
+                )
 
                 # Wrap the environment with the provided wrappers
                 for wrapper_cls, wrapper_kwargs in zip(wrappers, wrapper_kwargs_lst):
-                    env = wrapper_cls(env, **wrapper_kwargs)
+                    env = wrapper_cls(env, **hydra.utils.instantiate(wrapper_kwargs))
 
                 return env
 
