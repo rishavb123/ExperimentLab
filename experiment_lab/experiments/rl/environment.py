@@ -272,16 +272,13 @@ class GeneralVecEnv(SubprocVecEnv):
 
         super().__init__(env_fns=env_fns, start_method=start_method)
 
-    def step(self, actions: np.ndarray) -> VecEnvStepReturn:
-        """Steps through each environment.
-
-        Args:
-            actions (np.ndarray): The actions to take.
+    def step_wait(self) -> VecEnvStepReturn:
+        """Waits for the results of the step call and incremenets the environment idx if needed.
 
         Returns:
             VecEnvStepReturn: The step return.
         """
-        observations, rewards, dones, infos = super().step(actions)
+        observations, rewards, dones, infos = super().step_wait()
         # Increment total time steps
         self.total_time_steps += self.n_envs
         if (
