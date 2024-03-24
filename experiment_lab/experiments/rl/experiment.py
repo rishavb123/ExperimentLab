@@ -158,7 +158,9 @@ class RLExperiment(BaseExperiment):
         for callback_cls, callback_kwargs in zip(
             self.callback_cls_lst, self.callback_kwargs_lst
         ):
-            callback_instances.append(callback_cls(**callback_kwargs))
+            callback_instances.append(
+                callback_cls(**hydra.utils.instantiate(callback_kwargs))
+            )
 
         # Run the algorithm
         model.learn(
