@@ -32,6 +32,7 @@ class BaseExperiment(abc.ABC):
 
     def initialize_experiment(self) -> None:
         """Initializes the experiment that is about to get run."""
+        self.wandb_dict_config = asdict(self.cfg)
         if self.cfg.experiment_name:
             self.experiment_name = self.cfg.experiment_name
         else:
@@ -83,7 +84,7 @@ class BaseExperiment(abc.ABC):
             wandb_run = wandb.init(
                 id=run_id,
                 config={
-                    **asdict(self.cfg),
+                    **self.wandb_dict_config,
                     "experiment_name": self.experiment_name,
                     "timestamp": self.timestamp,
                     "experiment_id": self.experiment_id,
