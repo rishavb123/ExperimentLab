@@ -1,8 +1,8 @@
 """The file to hold the base configuration object."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict
+from typing import Any, Dict, List
 from hydra.core.config_store import ConfigStore
 
 
@@ -11,6 +11,15 @@ class NRunMethodEnum(Enum):
 
     series = 0
     parallel = 1
+
+
+@dataclass
+class AnalysisConfig:
+    """Config for analysis of this experiment."""
+
+    filters: List[Dict] = field(default_factory=lambda: [])
+    wandb_keys: List[str] = field(default_factory=lambda: [])
+    index: str | None = None
 
 
 @dataclass
@@ -25,6 +34,9 @@ class BaseConfig:
     n_run_method: NRunMethodEnum = NRunMethodEnum.series
 
     wandb: Dict[str, Any] | None = None
+
+    run_analysis: bool = False
+    analysis: AnalysisConfig = field(default_factory=AnalysisConfig)
 
     def __post_init__(self) -> None:
         """Validation checks for base config"""
