@@ -13,6 +13,12 @@ save_model: true
 record_policy_videos: true
 video_freq: 50000
 video_length: 200
+analysis:
+    wandb_keys: 
+        - global_step
+        - rollout/ep_rew_mean
+        - rollout/ep_len_mean
+    index: global_step
 defaults:
     - rl_config
     - _self_

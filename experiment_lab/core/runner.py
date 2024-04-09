@@ -8,6 +8,7 @@ from omegaconf import DictConfig, OmegaConf
 
 import experiment_lab
 from experiment_lab.common.resolvers import register_resolvers
+from experiment_lab.core.base_analysis import BaseAnalysis
 from experiment_lab.core.base_config import BaseConfig, register_configs
 from experiment_lab.core.base_experiment import BaseExperiment
 
@@ -17,11 +18,12 @@ root_config_folder = f"{os.path.dirname(experiment_lab.__file__)}/configs"
 def run_experiment(
     experiment_cls: Type[BaseExperiment],
     config_cls: Type[BaseConfig] = BaseConfig,
+    analysis_cls: Type[BaseAnalysis] | None = None,
     register_configs: Callable[[], None] = register_configs,
     register_resolvers: Callable[[], None] = register_resolvers,
     config_path: str = root_config_folder,
     config_name: str = "config",
-) -> Sequence[Any]:
+) -> Any:
     """The main entrypoint to collect all the hydra config and run the experiment.
 
     Args:
@@ -41,10 +43,16 @@ def run_experiment(
     config_path = os.path.join(os.getcwd(), config_path)
 
     @hydra.main(config_path=config_path, config_name=config_name, version_base=None)
-    def main(dict_cfg: DictConfig) -> Sequence[Any]:
+    def main(dict_cfg: DictConfig) -> Any:
         OmegaConf.resolve(dict_cfg)
         cfg: config_cls = OmegaConf.to_object(dict_cfg)  # type: ignore
-        e = experiment_cls(cfg)
-        return e.run()
+        if cfg.run_analysis:
+            if analysis_cls is None:
+                raise ValueError("Analysis class not provided!")
+            a = analysis_cls(cfg)
+            return a._analyze_wrapper()
+        else:
+            e = experiment_cls(cfg)
+            return e.run()
 
     return main()
