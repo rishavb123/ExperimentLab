@@ -21,6 +21,8 @@ class AnalysisConfig:
     wandb_keys: List[str] = field(default_factory=lambda: [])
     index: str | None = None
     all_keys_per_step: bool = False
+    load_from_output_dir: bool = False
+    output_dir_to_load_from: str | None = None
 
 
 @dataclass
