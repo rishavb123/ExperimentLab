@@ -20,6 +20,7 @@ class AnalysisConfig:
     filters: List[Dict] = field(default_factory=lambda: [])
     wandb_keys: List[str] = field(default_factory=lambda: [])
     index: str | None = None
+    all_keys_per_step: bool = False
 
 
 @dataclass

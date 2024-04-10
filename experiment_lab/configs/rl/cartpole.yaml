@@ -19,6 +19,7 @@ analysis:
         - rollout/ep_rew_mean
         - rollout/ep_len_mean
     index: global_step
+    all_keys_per_step: true
 defaults:
     - rl_config
     - _self_

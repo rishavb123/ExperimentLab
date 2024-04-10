@@ -68,9 +68,17 @@ class BaseAnalysis(abc.ABC):
         configs = {}
 
         for wandb_run in tqdm.tqdm(wandb_runs):
-            df = pd.DataFrame(
-                wandb_run.scan_history(keys=self.cfg.analysis.wandb_keys),
-            )
+            if self.cfg.analysis.all_keys_per_step:
+                df = pd.DataFrame(
+                    wandb_run.scan_history(keys=self.cfg.analysis.wandb_keys),
+                )
+            else:
+                df = pd.DataFrame()
+                for key in self.cfg.analysis.wandb_keys:
+                    temp_df = pd.DataFrame(
+                        wandb_run.scan_history(keys=[key]),
+                    )
+                    df = pd.merge(df, temp_df, left_index=True, right_index=True, how='outer')
             df["experiment_id"] = wandb_run.config["experiment_id"]
             df["run_id"] = wandb_run.id
             if wandb_run.config["experiment_id"] not in configs:
