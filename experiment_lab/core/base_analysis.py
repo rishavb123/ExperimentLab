@@ -89,6 +89,7 @@ class BaseAnalysis(abc.ABC):
                 )
             else:
                 df.set_index(["experiment_id", "run_id"], append=True, inplace=True)
+                df = df.reorder_levels([1, 2, 0])
 
             full_df.append(df)
 
