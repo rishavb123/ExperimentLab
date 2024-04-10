@@ -1,11 +1,13 @@
 """Helper functions to analyze the results of experiments."""
 
 import abc
+import json
 from textwrap import indent
 from typing import Any, Dict, Tuple
 import pandas as pd
 import wandb
 import tqdm
+from hydra.core.hydra_config import HydraConfig
 import logging
 
 from experiment_lab.core.base_config import BaseConfig
@@ -96,6 +98,10 @@ class BaseAnalysis(abc.ABC):
         full_df = pd.concat(full_df)
         full_df.sort_index(inplace=True)
 
+        full_df.to_pickle(f"{self.output_directory}/run_data.pkl")
+        with open(f"{self.output_directory}/configs.json", "w") as f:
+            json.dump(configs, f, indent=4)
+
         return full_df, configs
 
     def _analyze_wrapper(self) -> Any:
@@ -104,6 +110,7 @@ class BaseAnalysis(abc.ABC):
         Returns:
             Any: The results of the analysis.
         """
+        self.output_directory = HydraConfig.get().runtime.output_dir
         df, configs = self.load_data()
         results = self.analyze(df=df, configs=configs)
         logger.info(results)
