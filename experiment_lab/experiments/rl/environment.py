@@ -270,6 +270,8 @@ class GeneralVecEnv(SubprocVecEnv):
         if start_method is None:
             start_method = "spawn" if "spawn" in mp.get_all_start_methods() else None
 
+        self.eval_env: ListEnv = make_env_fn(rank=n_envs)() # type: ignore
+
         super().__init__(env_fns=env_fns, start_method=start_method)
 
     def step_wait(self) -> VecEnvStepReturn:
@@ -289,6 +291,7 @@ class GeneralVecEnv(SubprocVecEnv):
             self.last_incr = self.total_time_steps
             # Trigger the novelty if enough steps have passed
             transfer_injected: List[bool] = self.env_method("incr_env_idx")
+            self.eval_env.incr_env_idx()
             if np.any(transfer_injected):
                 self.cur_env_idx += 1
                 dones[:] = True
