@@ -97,7 +97,7 @@ class AggregatedNetwork(nn.Module):
             output_module (nn.Module): The module to apply after aggregation.
         """
         super().__init__()
-        self.module_lst = module_lst
+        self.module_lst = nn.ModuleList(module_lst)
         self.aggregator = aggregator
         self.output_module = output_module
 
@@ -133,7 +133,7 @@ class MultiNetwork(nn.Module):
         """
         super().__init__()
         self.input_module = input_module
-        self.module_lst = module_lst
+        self.module_lst = nn.ModuleList(module_lst)
 
     def forward(self, x: torch.Tensor) -> Sequence[torch.Tensor]:
         """The forward function of the multi output network
