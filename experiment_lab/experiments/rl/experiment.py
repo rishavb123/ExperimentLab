@@ -2,13 +2,14 @@
 
 import os
 from typing import Any, List, Type, Dict
+import copy
 import gymnasium as gym
 import hydra
+from omegaconf import OmegaConf
 import torch
 from wandb.integration.sb3 import WandbCallback
 
 from stable_baselines3.common.callbacks import CallbackList
-from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.policies import BasePolicy
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import VecVideoRecorder
@@ -128,14 +129,15 @@ class RLExperiment(BaseExperiment):
         model = hydra.utils.instantiate(
             {
                 "_target_": self.cfg.model_cls,
+                "policy": self.policy_cls,
+                "policy_kwargs": self.cfg.policy_kwargs,
+                **self.model_kwargs,
             },
             env=env,
-            policy=self.policy_cls,
-            policy_kwargs=self.cfg.policy_kwargs,
             device=self.device,
             tensorboard_log=f"./logs/" if self.cfg.log else None,
             verbose=self.cfg.verbose,
-            **self.model_kwargs,
+            _convert_="partial",
         )
         model.set_random_seed(seed)
         model_save_path = f"{run_output_path}/models/"
@@ -159,7 +161,12 @@ class RLExperiment(BaseExperiment):
             self.callback_cls_lst, self.callback_kwargs_lst
         ):
             callback_instances.append(
-                callback_cls(**hydra.utils.instantiate(callback_kwargs))
+                hydra.utils.instantiate(
+                    {
+                        "_target_": callback_cls,
+                        **callback_kwargs,
+                    }
+                )
             )
 
         # Run the algorithm
