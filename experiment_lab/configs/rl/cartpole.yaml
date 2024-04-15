@@ -13,6 +13,10 @@ save_model: true
 record_policy_videos: true
 video_freq: 50000
 video_length: 200
+policy_kwargs:
+    net_arch:
+        pi: [64, 64]
+        vf: [64, 64]
 analysis:
     wandb_keys: 
         - global_step
