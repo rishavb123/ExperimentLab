@@ -32,6 +32,7 @@ class BaseConfig:
     experiment_name: str | None = None
 
     seed: int | None = None
+    timestamp: int | None = None
 
     n_runs: int = 1
     n_run_method: NRunMethodEnum = NRunMethodEnum.series

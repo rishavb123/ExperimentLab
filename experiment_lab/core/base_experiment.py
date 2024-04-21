@@ -39,7 +39,9 @@ class BaseExperiment(abc.ABC):
             self.experiment_name = (
                 f"{camel_to_snake_case(self.__class__.__name__.lower())}"
             )
-        self.timestamp = int(time.time())
+        self.timestamp = (
+            int(time.time()) if self.cfg.timestamp is None else self.cfg.timestamp
+        )
         self.experiment_id = f"{self.experiment_name}_{self.timestamp}"
         self.output_directory = HydraConfig.get().runtime.output_dir
         self.additional_wandb_init_kwargs = {}
