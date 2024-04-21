@@ -35,6 +35,7 @@ class BaseConfig:
     timestamp: int | None = None
 
     n_runs: int = 1
+    n_run_start: int = 0
     n_run_method: NRunMethodEnum = NRunMethodEnum.series
 
     wandb: Dict[str, Any] | None = None

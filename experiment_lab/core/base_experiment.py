@@ -137,14 +137,14 @@ class BaseExperiment(abc.ABC):
         if self.cfg.n_runs <= 1 or self.cfg.n_run_method == NRunMethodEnum.series:
             results = [
                 self._single_run_wrapper((self.cfg.seed, run_num))
-                for run_num in range(self.cfg.n_runs)
+                for run_num in range(self.cfg.n_run_start, self.cfg.n_run_start + self.cfg.n_runs)
             ]
         elif self.cfg.n_run_method == NRunMethodEnum.parallel:
             with mp.Pool() as pool:
                 results = pool.map(
                     func=self._single_run_wrapper,
                     iterable=[
-                        (self.cfg.seed, run_num) for run_num in range(self.cfg.n_runs)
+                        (self.cfg.seed, run_num) for run_num in range(self.cfg.n_run_start, self.cfg.n_run_start + self.cfg.n_runs)
                     ],
                 )
         assert results is not None, "Unknown n_run_method!"
