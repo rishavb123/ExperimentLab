@@ -26,5 +26,7 @@ def register_resolvers() -> None:
         k: v for k, v in globals().items() if k not in ignores and isfunction(v)
     }
 
+    resolvers["eval"] = eval  # type: ignore
+
     for k, v in resolvers.items():
         OmegaConf.register_new_resolver(k, v)
