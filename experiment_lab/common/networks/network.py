@@ -111,7 +111,7 @@ class AggregatedNetwork(nn.Module):
             torch.Tensor: The output of the network.
         """
         zs: Sequence[torch.Tensor] = [m(x) for x, m in zip(xs, self.module_lst)]
-        agg_z = self.aggregator(zs)
+        agg_z = self.aggregator(zs, dim=-1)  # type: ignore
         return self.output_module(agg_z)
 
 
