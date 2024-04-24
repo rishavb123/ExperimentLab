@@ -86,14 +86,14 @@ class AggregatedNetwork(nn.Module):
     def __init__(
         self,
         module_lst: Sequence[nn.Module],
-        aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+        aggregator: Callable[[Sequence[torch.Tensor]], torch.Tensor],
         output_module: nn.Module,
     ) -> None:
         """The constructor for the multi input network.
 
         Args:
             module_lst (Sequence[nn.Module]): The list of modules to apply before aggregation.
-            aggregator (Callable[[torch.Tensor, torch.Tensor], torch.Tensor]): The aggregator to use on the tensors.
+            aggregator (Callable[[Sequence[torch.Tensor]], torch.Tensor]): The aggregator to use on the tensors.
             output_module (nn.Module): The module to apply after aggregation.
         """
         super().__init__()
@@ -111,9 +111,7 @@ class AggregatedNetwork(nn.Module):
             torch.Tensor: The output of the network.
         """
         zs: Sequence[torch.Tensor] = [m(x) for x, m in zip(xs, self.module_lst)]
-        agg_z = zs[0]
-        for z in zs[1:]:
-            agg_z = self.aggregator(agg_z, z)
+        agg_z = self.aggregator(zs)
         return self.output_module(agg_z)
 
 
@@ -150,14 +148,14 @@ class MultiNetwork(nn.Module):
 
 def create_aggregated_network(
     module_lst: Sequence[nn.Module],
-    aggregator: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    aggregator: Callable[[Sequence[torch.Tensor]], torch.Tensor],
     output_module: nn.Module,
 ) -> AggregatedNetwork:
     """Creates an instance of the complex multi input network.
 
         Args:
             module_lst (Sequence[nn.Module]): The list of modules to apply before aggregation.
-            aggregator (Callable[[torch.Tensor, torch.Tensor], torch.Tensor]): The aggregator to use on the tensors.
+            aggregator (Callable[Sequence[torch.Tensor], torch.Tensor]): The aggregator to use on the tensors.
             output_module (nn.Module): The module to apply after aggregation.
 
     Returns:
