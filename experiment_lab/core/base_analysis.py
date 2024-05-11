@@ -58,14 +58,18 @@ class BaseAnalysis(abc.ABC):
             if self.cfg.wandb is None:
                 raise ValueError("Not wandb config specified")
             api = get_api_instance()
+            base_filters = [{"state": "finished"}]
+            if (
+                len(self.cfg.analysis.filters) == 0
+                and self.cfg.experiment_name is not None
+            ):
+                base_filters.append(
+                    {"config.experiment_name": self.cfg.experiment_name}
+                )
             wandb_runs = api.runs(
                 path=self.cfg.wandb["project"],
                 filters={
-                    "$and": [
-                        {"state": "finished"},
-                        {"config.experiment_name": self.cfg.experiment_name},
-                    ]
-                    + self.cfg.analysis.filters,
+                    "$and": base_filters + self.cfg.analysis.filters,
                 },
                 include_sweeps=False,
             )
